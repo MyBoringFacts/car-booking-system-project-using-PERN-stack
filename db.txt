@@ -1,0 +1,222 @@
+-- db name = CARPARK;postgres
+
+
+
+CREATE TABLE CUSTOMER (
+    customer_id SERIAL PRIMARY KEY,
+    customer_first_name VARCHAR(20) NOT NULL,
+    customer_last_name VARCHAR(20),
+    customer_ph_no VARCHAR(10) NOT NULL,
+    customer_address VARCHAR(100) NOT NULL,
+    customer_email VARCHAR(20) NOT NULL,
+    customer_password VARCHAR(16) NOT NULL
+);
+ALTER TABLE CUSTOMER
+ALTER COLUMN customer_password TYPE VARCHAR(50);
+
+
+
+CREATE TABLE Car (
+    car_id SERIAL PRIMARY KEY,
+    car_brand VARCHAR(25),
+    car_model VARCHAR(25),
+    car_color VARCHAR(15),
+    car_license VARCHAR(10) NOT NULL,
+    customer_id  SERIAL REFERENCES CUSTOMER(customer_id)
+);
+
+
+
+CREATE TABLE Building (
+    building_id SERIAL PRIMARY KEY,
+    building_address VARCHAR(100) NOT NULL,
+    building_capacity INTEGER,
+    building_name VARCHAR(20)
+);
+
+
+CREATE TABLE Slot (
+    building_id SERIAL REFERENCES Building(building_id),
+    slot_id INT PRIMARY KEY ,
+    slot_status BOOLEAN NOT NULL
+    -- CONSTRAINT valid_capacity CHECK (slot_id <= (SELECT building_capacity FROM Building WHERE building_id = building_id))
+);
+
+
+-- Create a function to check valid capacity
+-- CREATE OR REPLACE FUNCTION check_valid_capacity()
+-- RETURNS TRIGGER AS $$
+-- BEGIN
+--     IF (SELECT COUNT(*) FROM Slot WHERE building_id = NEW.building_id) > (SELECT building_capacity FROM Building WHERE building_id = NEW.building_id) THEN
+--         RAISE EXCEPTION 'Capacity constraint violated';
+--     END IF;
+--     RETURN NEW;
+-- END;
+-- $$ LANGUAGE plpgsql;
+
+-- -- Create a trigger to invoke the function before an insert
+-- CREATE TRIGGER before_insert_check_valid_capacity
+-- BEFORE INSERT ON Slot
+-- FOR EACH ROW
+-- EXECUTE FUNCTION check_valid_capacity();
+
+
+
+
+
+
+CREATE TABLE Staff(
+    staff_id SERIAL PRIMARY KEY,
+    building_id SERIAL REFERENCES Building(building_id),
+    staff_first_name VARCHAR(20) NOT NULL,
+    staff_last_name VARCHAR(20),
+    staff_ph_no VARCHAR(10) NOT NULL,
+    staff_address VARCHAR(100) NOT NULL,
+    staff_email VARCHAR(20) NOT NULL,
+    staff_password VARCHAR(16) NOT NULL
+);
+ALTER TABLE Staff
+ALTER COLUMN staff_email TYPE VARCHAR(50);
+
+
+CREATE TABLE Admin(
+    admin_id SERIAL PRIMARY KEY,
+    admin_first_name VARCHAR(20) NOT NULL,
+    admin_last_name VARCHAR(20),
+    admin_ph_no VARCHAR(10) NOT NULL,
+    admin_address VARCHAR(100) NOT NULL,
+    admin_email VARCHAR(20) NOT NULL,
+    admin_password VARCHAR(16) NOT NULL
+);
+ALTER TABLE Admin
+ALTER COLUMN admin_email TYPE VARCHAR(50);
+
+
+
+CREATE TABLE Session (
+    car_id SERIAL,
+    session_id SERIAL,
+    slot_id SERIAL,
+    enter_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    book_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (car_id, session_id, slot_id),
+    FOREIGN KEY (car_id) REFERENCES Car(car_id),
+    FOREIGN KEY (slot_id) REFERENCES Slot(slot_id)
+);
+
+
+****************************************************************************************************************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************************************************************************************************************
+****************************************************************************************************************************************************************************************************************************************************************************
+
+
+
+INSERT INTO Admin (admin_first_name, admin_ph_no, admin_address, admin_email, admin_password)
+VALUES
+  ('test admin', '0123456789', 'admin_test_address', 'admin_test_email', 'admin_password');
+
+
+INSERT INTO CUSTOMER (customer_first_name, customer_last_name, customer_ph_no, customer_address, customer_email, customer_password)
+VALUES
+  ('John', 'Doe', '1234567890', '123 Main St', 'john.doe@email.com', ' pAssword'),
+  ('Alice', 'Smith', '9876543210', '456 Oak Ave', 'alice.smith@email.com', ' pSssword');
+
+
+
+-- Dummy data for Car table
+INSERT INTO Car (car_brand, car_model, car_color, car_license, customer_id)
+VALUES
+  ('Toyota', 'Camry', 'Blue', 'ABC123', 1),
+  ('Honda', 'Civic', 'Red', 'XYZ789', 2);
+
+
+-- Dummy data for Building table
+INSERT INTO Building (building_address, building_capacity, building_name)
+VALUES
+  ('123 Parking St', 100, 'Parking Lot A'),
+  ('456 Garage Ave', 50, 'Garage B');
+
+
+
+
+-- Dummy data for Staff table
+INSERT INTO Staff (building_id, staff_first_name, staff_last_name, staff_ph_no, staff_address, staff_email, staff_password)
+VALUES
+  (1, 'Mark', 'Johnson', '5551234567', '789 Staff St', 'mark.johnson@email.com', 'staff_password'),
+  (2, 'Emily', 'Davis', '5559876543', '456 Staff Ave', 'emily.davis@email.com', 'staff_password');
+
+
+-- Dummy data for Admin table
+INSERT INTO Admin (admin_first_name, admin_last_name, admin_ph_no, admin_address, admin_email, admin_password)
+VALUES
+  ('Admin', 'Superuser', '5551112233', 'Admin Blvd', 'admin@email.com', 'admin_password');
+
+
+
+
+-- Assuming that Building IDs start from 1 and go up to the number of buildings you have
+-- DO $$
+-- DECLARE
+--   building_count INTEGER := (SELECT COUNT(*) FROM Building);
+--   building_index INTEGER;
+--   slot_counter INTEGER := 1;  -- Initialize counter for slot IDs
+-- BEGIN
+--   FOR building_index IN 1..building_count LOOP
+--     FOR i IN 1..10 LOOP  -- Loop 10 times for each building
+--       INSERT INTO Slot (building_id, slot_id, slot_status)
+--       VALUES (building_index, slot_counter, TRUE);
+--       slot_counter := slot_counter + 1;  -- Increment counter for unique IDs
+--     END LOOP;
+--   END LOOP;
+-- END $$;
+
+
+
+
+******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************-- Drop the foreign key constraint
+-- Drop the Session table
+DROP TABLE IF EXISTS Session;
+
+-- Drop the Slot table
+DROP TABLE IF EXISTS Slot;
+
+-- Recreate the Slot table with altered data type
+CREATE TABLE Slot (
+    building_id SERIAL REFERENCES Building(building_id),
+    slot_id INT PRIMARY KEY,
+    slot_status BOOLEAN NOT NULL
+);
+
+-- Recreate the Session table
+CREATE TABLE Session (
+    slot_id INT,
+    session_id SERIAL,
+    car_id SERIAL,
+    enter_time TIMESTAMP NOT NULL,
+    end_time TIMESTAMP,
+    building_id SERIAL,
+    book_time TIMESTAMP NOT NULL,
+    PRIMARY KEY (slot_id, session_id, car_id),
+    FOREIGN KEY (slot_id, building_id) REFERENCES Slot(slot_id, building_id),
+    FOREIGN KEY (car_id) REFERENCES Car(car_id)
+);
+
+
+
+
+******************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************
+*********************************************************************************************************************************************************************************************************-- Drop the foreign key constraint
+
+
+-- Insert dummy data into the Slot table
+INSERT INTO Slot (building_id, slot_id, slot_status) VALUES
+(1, 1, true),   -- Slot in Building 1 with ID 1 and status true
+(1, 2, false),  -- Slot in Building 1 with ID 2 and status false
+(2, 1, true),   -- Slot in Building 2 with ID 1 and status true
+(2, 2, true);   -- Slot in Building 2 with ID 2 and status true
