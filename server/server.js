@@ -1,10 +1,11 @@
 require("dotenv").config();
+const cors = require("cors");
 const express = require("express");
 const app = express();
-
+const bcrypt = require("bcrypt");
 const db = require("./db/index.js");
 app.use(express.json());
-
+app.use(cors());
 const port_number = process.env.PORT || 5001;
 app.listen(port_number, () => {
   console.log(`Server is up on ${port_number}`);
@@ -422,7 +423,393 @@ app.delete("/api/v1/customer/:customerId/cars/:carId", async (req, res) => {
 //***********************************************************************************
 // **********************************************************************************
 
-app.use(express.json()); // Middleware to parse JSON requests
+//Create a staff
+app.post("/api/v1/staff", async (req, res) => {
+  const {
+    staff_first_name,
+    staff_last_name,
+    staff_ph_no,
+    staff_address,
+    staff_email,
+    staff_password,
+    building_id,
+  } = req.body;
+
+  try {
+    const results = await db.query(
+      "INSERT INTO Staff(staff_first_name, staff_last_name, staff_ph_no, staff_address, staff_email, staff_password, building_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+      [
+        staff_first_name,
+        staff_last_name,
+        staff_ph_no,
+        staff_address,
+        staff_email,
+        staff_password,
+        building_id,
+      ]
+    );
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        staff: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("POST OPERATION FAILED");
+  }
+});
+
+//get a staff within a building
+app.get("/api/v1/staff/building/:building_id", async (req, res) => {
+  const buildingId = req.params.building_id;
+
+  try {
+    const results = await db.query(
+      "SELECT * FROM Staff WHERE building_id = $1",
+      [buildingId]
+    );
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("GET OPERATION FAILED");
+  }
+});
+
+//get a staff by id
+app.get("/api/v1/staff/:id", async (req, res) => {
+  const staffId = req.params.id;
+
+  try {
+    const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
+      staffId,
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("GET OPERATION FAILED");
+  }
+});
+//get all the staffs
+app.get("/api/v1/staff", async (req, res) => {
+  try {
+    const results = await db.query("SELECT * FROM Staff");
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("GET OPERATION FAILED");
+  }
+});
+//delete a staff
+app.delete("/api/v1/staff/:id", async (req, res) => {
+  const staffId = req.params.id;
+
+  try {
+    await db.query("DELETE FROM Staff WHERE staff_id = $1", [staffId]);
+    res.status(200).json({
+      status: "success",
+      message: "Staff member deleted successfully",
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("DELETE OPERATION FAILED");
+  }
+});
+
+// Update a staff
+app.put("/api/v1/staff/:id", async (req, res) => {
+  const staffId = req.params.id;
+
+  try {
+    const {
+      staff_first_name,
+      staff_last_name,
+      staff_ph_no,
+      staff_address,
+      staff_email,
+      staff_password,
+      building_id,
+    } = req.body;
+
+    const results = await db.query(
+      `UPDATE Staff
+         SET staff_first_name = $1,
+             staff_last_name = $2,
+             staff_ph_no = $3,
+             staff_address = $4,
+             staff_email = $5,
+             staff_password = $6,
+             building_id = $7
+         WHERE staff_id = $8
+         RETURNING *;`,
+      [
+        staff_first_name,
+        staff_last_name,
+        staff_ph_no,
+        staff_address,
+        staff_email,
+        staff_password,
+        building_id,
+        staffId,
+      ]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("UPDATE OPERATION FAILED");
+  }
+});
+//get a staff by id
+app.get("/api/v1/staff/:id", async (req, res) => {
+  const staffId = req.params.id;
+
+  try {
+    const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
+      staffId,
+    ]);
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("GET OPERATION FAILED");
+  }
+});
+//update a staff
+app.put("/api/v1/staff/:id", async (req, res) => {
+  const staffId = req.params.id;
+
+  try {
+    const {
+      staff_first_name,
+      staff_last_name,
+      staff_ph_no,
+      staff_address,
+      staff_email,
+      staff_password,
+      building_id,
+    } = req.body;
+
+    const results = await db.query(
+      `UPDATE Staff
+         SET staff_first_name = $1,
+             staff_last_name = $2,
+             staff_ph_no = $3,
+             staff_address = $4,
+             staff_email = $5,
+             staff_password = $6,
+             building_id = $7
+         WHERE staff_id = $8
+         RETURNING *;`,
+      [
+        staff_first_name,
+        staff_last_name,
+        staff_ph_no,
+        staff_address,
+        staff_email,
+        staff_password,
+        building_id,
+        staffId,
+      ]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: results.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+    console.log("UPDATE OPERATION FAILED");
+  }
+});
+
+const buildingInfoModule = require("../CarRev/staff/backend/userstate.js");
+
+// Login
+
+// app.post("/api/v1/staff/login", async (req, res) => {
+//   const { username, password } = req.body;
+
+//   try {
+//     // Retrieve staff information based on the provided staff_id
+//     const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
+//       username,
+//     ]);
+
+//     // Check if a staff member with the provided staff_id exists
+//     if (results.rows.length === 0) {
+//       return res.status(401).json({
+//         status: "error",
+//         message: "Invalid username or password",
+//       });
+//     }
+
+//     // Retrieve additional details, e.g., building information
+//     const staffDetails = results.rows[0];
+//     const buildingInfo = await db.query(
+//       "SELECT * FROM Building WHERE building_id = $1",
+//       [staffDetails.building_id]
+//     );
+
+//     // Set the current building information using the module
+//     buildingInfoModule.setCurrentBuilding(
+//       buildingInfo.rows[0].buildingName,
+//       staffDetails
+//     );
+//     console.log("Results from staff query:", results.rows);
+//     console.log("Staff details:", staffDetails);
+//     console.log("Building information:", buildingInfo.rows[0]);
+
+//     // Login successful, send the response
+//     res.status(200).json({
+//       status: "success",
+//       message: "Login successful",
+//       data: {
+//         staff: {
+//           staff_id: staffDetails.staff_id,
+//           staff_first_name: staffDetails.staff_first_name,
+//           staff_last_name: staffDetails.staff_last_name,
+//           staff_ph_no: staffDetails.staff_ph_no,
+//           staff_address: staffDetails.staff_address,
+//           staff_email: staffDetails.staff_email,
+//           building: buildingInfo.rows[0], // Include building details
+//         },
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+
+app.post("/api/v1/staff/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  try {
+    // Retrieve staff information based on the provided staff_id
+    const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
+      username,
+    ]);
+
+    // Check if a staff member with the provided staff_id and password exists
+    if (
+      results.rows.length === 0 ||
+      results.rows[0].staff_password !== password
+    ) {
+      return res.status(401).json({
+        status: "error",
+        message: "Invalid username or password",
+      });
+    }
+
+    // Staff details
+    const staffDetails = results.rows[0];
+
+    // Login successful, send the response
+    res.status(200).json({
+      status: "success",
+      message: "Login successful",
+      data: {
+        staff: {
+          staff_id: staffDetails.staff_id,
+          staff_first_name: staffDetails.staff_first_name,
+          staff_last_name: staffDetails.staff_last_name,
+          staff_ph_no: staffDetails.staff_ph_no,
+          staff_address: staffDetails.staff_address,
+          staff_email: staffDetails.staff_email,
+          building_id: staffDetails.building_id,
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+// example login post
+// {
+//   "username": "john_doe",
+//   "password": "password123"
+// }
+
+//***********************************************************************************
+// **********************************************************************************
+//***********************************************************************************
+// **********************************************************************************
+//***********************************************************************************
+// **********************************************************************************
+//***********************************************************************************
+// **********************************************************************************
+//***********************************************************************************
+// **********************************************************************************
+//***********************************************************************************
+// **********************************************************************************
 
 // Create operation for a new building
 app.post("/api/v1/buildings", async (req, res) => {

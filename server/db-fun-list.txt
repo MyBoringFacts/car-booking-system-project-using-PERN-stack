@@ -1,0 +1,48 @@
+//GET ALL CUSTOMER;
+//GET ONE CUSTOMER;
+//Update a customer
+//Create a CUSTOMER;
+//Delete a customer;
+
+
+
+
+
+
+// Create operation for a new car for a specific customer
+//Read operation for all cars of a specific customer
+// Read operation for all cars
+// Read operation for a specific car
+/ Update operation for a specific car of a specific customer
+/ Delete operation for a specific car of a specific customer
+
+
+
+
+// Create operation for a new building          /api/v1/buildings
+// Read operation for all buildings             /api/v1/buildings
+// Read operation for a specific building       /api/v1/buildings/:buildingId
+// Update operation for a new building          /api/v1/buildings/:buildingId
+// Delete operation for a specific building     http://localhost:5000/api/v1/buildings/:id
+
+
+
+
+// Read operation for all slots in a specific building                  -/api/v1/buildings/:buildingId/slots
+// Read operation for a specific slot in a specific building            -/api/v1/buildings/:buildingId/slots/:slotId
+// Update operation for a specific slot in a specific building          -/api/v1/buildings/:buildingId/slots/:slotId"
+// Delete operation for a specific slot in a specific building          -/api/v1/buildings/:buildingId/slots/:slotId
+
+
+//Get all staff from a specific building: --/http://localhost:5000/api/v1/staff/building/1
+// Get a specific staff member:           --/api/v1/staff/:staffId
+// Get all the staffs                     --/api/v1/staff
+// Update a specific staff                --/api/v1/staff/:staffId
+// Delete a specific staff                --/api/v1/staff
+// Login                                  --/api/v1/staff/login
+
+
+
+
+
+
