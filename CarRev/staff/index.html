@@ -574,69 +574,79 @@
                           role="tabpanel"
                           aria-labelledby="pills-contact-tab"
                         >
-                          <div class="row mb-3">
-                            <div class="col-3">
-                              <div
-                                class="custom-card text-center"
-                                style="
-                                  border-right: 1px solid rgba(0, 0, 0, 0.1);
-                                "
-                              >
-                                <h5 class="">Building 1</h5>
-                                <p>
-                                  <span
-                                    class="badge"
-                                    style="background-color: #6695ff"
-                                    >3</span
-                                  >
-                                  Spaces Available
-                                </p>
-                                <button
-                                  class="btn btn-primary `shadow-none py-1 px-4"
+                          <div id="slotsContainer">
+                            <!-- <div id =availiableSlots">
+                            <div class="row mb-3">
+                              <div class="col-3">
+                                <div
+                                  class="custom-card text-center"
                                   style="
-                                    border-radius: 100px;
-                                    background-color: #6695ff;
-                                    border-color: #6695ff;
+                                    border-right: 1px solid rgba(0, 0, 0, 0.1);
                                   "
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#reserveModal"
                                 >
-                                  Edit Capacity
-                                </button>
+                                  <h5 class="">SLOT ID</h5>
+                                  <p>
+                                    <span
+                                      class="badge"
+                                      style="background-color: #6695ff"
+                                      >slot_id</span
+                                    >
+                                  </p>
+                                  <button
+                                    class="btn btn-primary `shadow-none py-1 px-4"
+                                    style="
+                                      border-radius: 100px;
+                                      background-color: #6695ff;
+                                      border-color: #6695ff;
+                                    "
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reserveModal"
+                                  >
+                                    Assign Car
+                                  </button>
+                                </div>
                               </div>
                             </div>
-                            <div class="col-3">
-                              <div
-                                class="custom-card text-center"
-                                style="
-                                  border-right: 1px solid rgba(0, 0, 0, 0.1);
-                                "
-                              >
-                                <h5 class="">Building 1</h5>
-                                <p>
-                                  <span
-                                    class="badge"
-                                    style="background-color: #6695ff"
-                                    >3</span
+                          </div>
+                            -->
+
+                            <div id="availiableSlots">
+                              <!-- Corrected id -->
+                              <div class="row mb-3">
+                                <div class="col-3">
+                                  <div
+                                    class="custom-card text-center"
+                                    style="
+                                      border-right: 1px solid rgba(0, 0, 0, 0.1);
+                                    "
                                   >
-                                  occupied
-                                </p>
-                                <button
-                                  class="btn btn-primary `shadow-none py-1 px-4"
-                                  style="
-                                    border-radius: 100px;
-                                    background-color: #6695ff;
-                                    border-color: #6695ff;
-                                  "
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#reserveModal"
-                                >
-                                  Edit Capacity
-                                </button>
+                                    <h5 class="">SLOT ID</h5>
+                                    <p>
+                                      <span
+                                        class="badge"
+                                        style="background-color: #6695ff"
+                                        >slot_id</span
+                                      >
+                                    </p>
+                                    <button
+                                      class="btn btn-primary shadow-none py-1 px-4"
+                                      style="
+                                        border-radius: 100px;
+                                        background-color: #6695ff;
+                                        border-color: #6695ff;
+                                      "
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#reserveModal"
+                                    >
+                                      Assign Car
+                                    </button>
+                                  </div>
+                                </div>
                               </div>
                             </div>
                           </div>
                         </div>
+                        <!-- <div id="slotsContainer"></div> -->
 
                         <!-- Modal -->
                         <div
@@ -660,7 +670,7 @@
                                 ></button>
                               </div>
                               <div class="modal-body">
-                                <form action="">
+                                <!-- <form action="">
                                   <div class="form-group mb-3">
                                     <label for="">Name*</label>
                                     <input
@@ -678,39 +688,30 @@
                                   </div>
 
                                   <div class="form-group mb-3">
-                                    <label for="">Vehicle Info*</label>
+                                    <label for="">Car Lincense </label>
                                     <input
                                       type="text"
                                       class="form-control form-contorl-sm"
+                                      placeholder="Car Lincense"
                                     />
                                   </div>
-
                                   <div class="form-group mb-3">
-                                    <label for="">Time In</label>
-                                    <input
-                                      type="time"
-                                      class="form-control form-contorl-sm"
-                                    />
-                                  </div>
-
-                                  <div class="form-group mb-3">
-                                    <label for="">Building</label>
+                                    <label for="">Car Modal </label>
                                     <input
                                       type="text"
-                                      disabled
-                                      value="Building 1"
                                       class="form-control form-contorl-sm"
+                                      placeholder="Car Model"
                                     />
                                   </div>
-
                                   <div class="form-group mb-3">
-                                    <label for="">Remarks</label>
-                                    <textarea
-                                      type="textarea"
+                                    <label for="">Car Color* </label>
+                                    <input
+                                      type="text"
                                       class="form-control form-contorl-sm"
-                                    ></textarea>
+                                      placeholder="Car Color"
+                                    />
                                   </div>
-                                </form>
+                                </form> -->
                               </div>
                               <div class="modal-footer">
                                 <button
@@ -763,6 +764,7 @@
     <script src="backend/bookedList.js"></script>
     <script src="backend/acceptedList.js" defer></script>
     <script src="backend/occupied.js" defer></script>
+    <script src="backend/availiableSpots.js" defer></script>
     <!-- endbuild -->
 
     <!-- Vendors JS -->

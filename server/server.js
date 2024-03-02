@@ -1675,64 +1675,153 @@ app.get("/api/v1/buildings/:buildingId/customers", async (req, res) => {
   }
 });
 
-app.get("/api/v1/buildings/slotDetails", async (req, res) => {
-  console.log("Inside the route callback");
+// app.get("/api/v1/buildings/slotDetails", async (req, res) => {
+//   console.log("Inside the route callback");
+//   try {
+//     const temp = sessionManager.getSession();
+//     console.log("Session:", temp);
+
+//     const buildingId = temp?.building_id ?? 1;
+//     console.log("Building ID:", buildingId);
+
+//     const results = await db.query(
+//       `SELECT
+//         COUNT(*) AS total_slots,
+//         SUM(CASE WHEN slot_status = TRUE THEN 1 ELSE 0 END) AS total_available_slots,
+//         SUM(CASE WHEN slot_status = FALSE THEN 1 ELSE 0 END) AS total_occupied_slots
+//       FROM Slot
+//       WHERE building_id = $1`,
+//       [parseInt(buildingId)]
+//     );
+
+//     const { total_slots, total_available_slots, total_occupied_slots } =
+//       results.rows[0];
+
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         totalSlots: total_slots,
+//         totalAvailableSlots: total_available_slots,
+//         totalOccupiedSlots: total_occupied_slots,
+//       },
+//     });
+//   } catch (err) {
+//     console.error("Error:", err);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+
+// POST endpoint to create slots for a specific building
+app.post("/api/v1/buildings/:building/addslots", async (req, res) => {
+  const temp = sessionManager.getSession();
   try {
-    const temp = sessionManager.getSession();
-    console.log("Session:", temp);
+    const buildingId = temp?.building_id ?? req.params.building;
+    const { slotId } = req.body;
 
-    const buildingId = temp?.building_id ?? 1;
-    console.log("Building ID:", buildingId);
-
-    const results = await db.query(
-      `SELECT
-        COUNT(*) AS total_slots,
-        SUM(CASE WHEN slot_status = TRUE THEN 1 ELSE 0 END) AS total_available_slots,
-        SUM(CASE WHEN slot_status = FALSE THEN 1 ELSE 0 END) AS total_occupied_slots
-      FROM Slot
-      WHERE building_id = $1`,
-      [parseInt(buildingId)]
+    // Retrieve all existing slot_ids for the given building
+    const existingSlotsResult = await db.query(
+      "SELECT slot_id FROM Slot WHERE building_id = $1 ORDER BY slot_id ASC",
+      [buildingId]
     );
 
-    const { total_slots, total_available_slots, total_occupied_slots } =
-      results.rows[0];
+    const existingSlots = existingSlotsResult.rows.map((row) => row.slot_id);
 
-    res.status(200).json({
-      status: "success",
-      data: {
-        totalSlots: total_slots,
-        totalAvailableSlots: total_available_slots,
-        totalOccupiedSlots: total_occupied_slots,
-      },
-    });
-  } catch (err) {
-    console.error("Error:", err);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
+    let nextSlotId;
+
+    if (slotId && !existingSlots.includes(slotId)) {
+      // Use the provided slot_id if it doesn't already exist
+      nextSlotId = slotId;
+    } else {
+      // Determine the next available slot_id by finding the first gap
+      for (let i = 1; i <= existingSlots.length; i++) {
+        if (!existingSlots.includes(i)) {
+          nextSlotId = i;
+          break;
+        }
+      }
+
+      // If no gap is found, use the next number after the last existing slot_id
+      if (!nextSlotId) {
+        nextSlotId = existingSlots.length + 1;
+      }
+    }
+
+    // Insert the slot into the Slot table
+    const result = await db.query(
+      "INSERT INTO Slot (building_id, slot_id) VALUES ($1, $2) RETURNING *",
+      [buildingId, nextSlotId]
+    );
+
+    const newSlot = result.rows[0];
+
+    res
+      .status(201)
+      .json({ message: "Slot created successfully", slot: newSlot });
+  } catch (error) {
+    console.error("Error creating slot:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 });
 
-app.get("/api/v1/buildings/availiablespots", async (req, res) => {
+app.get("/api/v1/buildings/slotsDetails", async (req, res) => {
   const temp = sessionManager.getSession();
 
   const buildingId = temp?.building_id ?? 1;
 
   try {
-    const results = await db.query(
-      `SELECT * FROM nslot
-          
-          WHERE
-              slot.building_id = $1
-              AND Slot.slot_status = TRUE;`,
+    // Get building_capacity from building table
+    const buildingCapacityResult = await db.query(
+      `SELECT building_capacity FROM building WHERE building_id = $1;`,
       [buildingId]
     );
+
+    const buildingCapacity = buildingCapacityResult.rows[0]?.building_capacity;
+
+    // Count the total_slot_number for the specified building_id
+    const totalSlotResult = await db.query(
+      `SELECT COUNT(*) as total_slot_number FROM slot
+       WHERE building_id = $1;`,
+      [buildingId]
+    );
+
+    const totalSlotNumber = totalSlotResult.rows[0]?.total_slot_number;
+
+    // Get available slots information
+    const availableResults = await db.query(
+      `SELECT * FROM slot
+       WHERE building_id = $1 AND slot_status = TRUE;`,
+      [buildingId]
+    );
+
+    const availableSessions = availableResults.rows.map((slot) => ({
+      building_id: slot.building_id,
+      slot_id: slot.slot_id,
+      slot_status: slot.slot_status,
+    }));
+
+    // Get occupied slots information
+    const occupiedResults = await db.query(
+      `SELECT * FROM slot
+       WHERE building_id = $1 AND slot_status = FALSE;`,
+      [buildingId]
+    );
+
+    const occupiedSessions = occupiedResults.rows.map((slot) => ({
+      building_id: slot.building_id,
+      slot_id: slot.slot_id,
+      slot_status: slot.slot_status,
+    }));
 
     res.status(200).json({
       status: "success",
       data: {
-        availableSessions: results.rows,
+        total_slot_number: totalSlotNumber,
+        building_capacity: buildingCapacity,
+        availableSessions: availableSessions,
+        occupiedSessions: occupiedSessions,
       },
     });
   } catch (err) {
