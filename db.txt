@@ -1,5 +1,5 @@
 -- db name = CARPARK;postgres
-
+ALTER SEQUENCE <tablename>_<id>_seq RESTART WITH 1
 
 
 CREATE TABLE CUSTOMER (
@@ -38,7 +38,8 @@ CREATE TABLE Building (
 CREATE TABLE Slot (
     building_id SERIAL REFERENCES Building(building_id),
     slot_id INT PRIMARY KEY ,
-    slot_status BOOLEAN NOT NULL
+    slot_status BOOLEAN NOT NULL,
+    slot_status set DEFAULT true
     -- CONSTRAINT valid_capacity CHECK (slot_id <= (SELECT building_capacity FROM Building WHERE building_id = building_id))
 );
 
@@ -91,20 +92,7 @@ CREATE TABLE Admin(
 ALTER TABLE Admin
 ALTER COLUMN admin_email TYPE VARCHAR(50);
 
-
-
-CREATE TABLE Session (
-    car_id SERIAL,
-    session_id SERIAL,
-    slot_id SERIAL,
-    enter_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP,
-    book_time TIMESTAMP NOT NULL,
-    PRIMARY KEY (car_id, session_id, slot_id),
-    FOREIGN KEY (car_id) REFERENCES Car(car_id),
-    FOREIGN KEY (slot_id) REFERENCES Slot(slot_id)
-);
-
+ 
 
 ****************************************************************************************************************************************************************************************************************************************************************************
 ****************************************************************************************************************************************************************************************************************************************************************************
@@ -196,14 +184,18 @@ CREATE TABLE Session (
     slot_id INT,
     session_id SERIAL,
     car_id SERIAL,
-    enter_time TIMESTAMP NOT NULL,
+    arrival_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP,
     building_id SERIAL,
     book_time TIMESTAMP NOT NULL,
+    start_time NOT NULL,
     PRIMARY KEY (slot_id, session_id, car_id),
     FOREIGN KEY (slot_id, building_id) REFERENCES Slot(slot_id, building_id),
     FOREIGN KEY (car_id) REFERENCES Car(car_id)
 );
+
+ALTER TABLE Session
+ADD COLUMN staff_auth VARCHAR(10) CHECK (staff_auth IN ('accepted', 'rejected', 'unverified')) DEFAULT 'unverified';
 
 
 
@@ -220,3 +212,92 @@ INSERT INTO Slot (building_id, slot_id, slot_status) VALUES
 (1, 2, false),  -- Slot in Building 1 with ID 2 and status false
 (2, 1, true),   -- Slot in Building 2 with ID 1 and status true
 (2, 2, true);   -- Slot in Building 2 with ID 2 and status true
+//true means free
+false means no
+
+ALTER TABLE Session
+ADD COLUMN staff_auth VARCHAR(10) CHECK (staff_auth IN ('accepted', 'rejected', 'unverified')) DEFAULT 'unverified';
+
+INSERT INTO Session (car_id, slot_id, enter_time, end_time,building_id, book_time)
+VALUES
+    (1,  1, '2024-02-28 10:00:00', NULL,                  1, '2024-02-28 09:30:00'),
+    (3,  2, '2024-02-28 11:30:00', '2024-02-28 13:00:00', 1,'2024-02-28 10:45:00'),
+    (4,  3, '2024-02-28 10:00:00', NULL,                  1, '2024-02-28 09:30:00'),
+    (2,  1, '2024-02-28 11:30:00', '2024-02-28 13:00:00', 2,'2024-02-28 10:45:00'),
+
+
+
+    
+INSERT INTO Session (slot_id, session_id, car_id, enter_time, end_time, building_id, book_time, staff_auth)
+VALUES
+    (1, 4, 7, '2024-03-01 08:00:00', '2024-03-01 09:00:00', 1, '2024-02-28 20:00:00', 'accepted'),
+    (1, 5, 8, '2024-03-02 09:30:00', '2024-03-01 10:30:00', 1, '2024-02-28 21:00:00', 'unverified'),
+    (1, 6, 9, '2024-03-03 11:00:00', '2024-03-01 12:00:00', 1, '2024-02-28 22:00:00', 'rejected');
+
+
+CREATE OR REPLACE FUNCTION check_slot_status()
+RETURNS TRIGGER AS $$
+BEGIN
+    -- Check if the operation is a deletion
+    IF TG_OP = 'DELETE' THEN
+        -- Set slot_status back to TRUE for the associated slot_id
+        UPDATE Slot
+        SET slot_status = TRUE
+        WHERE slot_id = OLD.slot_id AND building_id = OLD.building_id;
+        RETURN OLD;
+    END IF;
+
+    -- Check if the operation is an update with end_time
+    IF TG_OP = 'UPDATE' AND NEW.end_time IS NOT NULL AND OLD.end_time IS NULL THEN
+        -- Set slot_status back to TRUE for the associated slot_id
+        UPDATE Slot
+        SET slot_status = TRUE
+        WHERE slot_id = NEW.slot_id AND building_id = NEW.building_id;
+    END IF;
+
+    -- For INSERT and UPDATE operations, check and update the Slot table
+    IF NEW.slot_id IS NOT NULL AND NEW.building_id IS NOT NULL AND NEW.end_time IS NULL THEN
+        -- Check if the slot is inside a session and set slot_status to false
+        UPDATE Slot
+        SET slot_status = FALSE
+        WHERE slot_id = NEW.slot_id AND building_id = NEW.building_id;
+    END IF;
+
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+
+
+
+
+INSERT INTO Session (slot_id, car_id, arrival_time, building_id, book_time, start_time)
+VALUES (1, 1, '2024-03-02 12:00:00', 1, '2024-03-01 10:00:00', '2024-03-02 12:00:00');
+
+UPDATE Session
+SET end_time = '2024-03-02 13:00:00'
+WHERE slot_id = 1 AND car_id = 1 AND arrival_time = '2024-03-02 12:00:00';
+
+
+-- Temporarily disable the trigger
+ALTER TABLE Session DISABLE TRIGGER before_insert_update_delete_session;
+
+-- Attempt the deletion again
+DELETE FROM session WHERE session_id = 1;
+
+-- Re-enable the trigger (if needed)
+ALTER TABLE Session ENABLE TRIGGER before_insert_update_delete_session;
+
+
+
+
+
+-- Inserting dummy sessions
+INSERT INTO Session (slot_id, session_id, car_id, arrival_time, end_time, building_id, book_time, start_time, staff_auth)
+VALUES
+  (1, 1, 1, NULL, NULL, 1, '2023-01-01 12:00:00', '2023-01-02 14:30:00', 'unverified'),
+  (2, 2, 6, NULL, NULL, 1, '2023-01-01 14:00:00', '2023-01-02 15:45:00', 'unverified'),
+  (3, 3, 3, NULL, NULL, 1, '2023-01-02 09:30:00', '2023-01-03 10:15:00', 'unverified'),
+  (4, 4, 8, NULL, NULL, 2, '2023-01-02 10:00:00', '2023-01-03 11:45:00', 'unverified'),
+  (5, 5, 9, NULL, NULL, 2, '2023-01-03 13:30:00', '2023-01-04 15:00:00', 'unverified');

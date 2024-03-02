@@ -44,5 +44,12 @@
 
 
 
+//session
+//POST A Session (arrival_time, id,staff_auth,end_time can be null) --/api/v1/sessions
+//get sessions under a building_id                                --/api/v1/buildings/:buildingId/bookings
+// get a session by session_id                                    --/api/v1/sessions/:sessionId
+//Update  sesion by session_id                                    --/api/v1/sessions/:sessionId
+//Delete session by session_id                                    --/api/v1/sessions/:sessionId
+//Get list of boooked session inside a building     `             --/api/v1/buildings/:buildingId/unverified-sessions
 
 

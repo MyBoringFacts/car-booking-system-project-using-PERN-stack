@@ -1,1 +1,4 @@
-HELLO< IM TEST FILE.
+as well as read operation for the following cases for the above table?
+-all sessions belongs to a building.
+-all sessions belongs to a customer.
+-all sessions before a specific time . I(past event, check the end time)

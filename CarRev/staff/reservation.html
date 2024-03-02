@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+
+<html
+  lang="en"
+  class="light-style layout-menu-fixed layout-compact"
+  dir="ltr"
+  data-theme="theme-default"
+  data-assets-path="assets/"
+  data-template="vertical-menu-template-free">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0" />
+
+    <title>Spot Saver</title>
+
+    <meta name="description" content="" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.ico" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500;1,600;1,700&display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="assets/vendor/fonts/boxicons.css" />
+
+    <!-- Core CSS -->
+    <link rel="stylesheet" href="assets/vendor/css/core.css" class="template-customizer-core-css" />
+    <link rel="stylesheet" href="assets/vendor/css/theme-default.css" class="template-customizer-theme-css" />
+    <link rel="stylesheet" href="assets/css/demo.css" />
+
+    <!-- Vendors CSS -->
+    <link rel="stylesheet" href="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.css" />
+    <link rel="stylesheet" href="assets/vendor/libs/apex-charts/apex-charts.css" />
+
+    <!-- Page CSS -->
+
+    <!-- J query -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <!-- Helpers -->
+    <script src="assets/vendor/js/helpers.js"></script>
+    <!--! Template customizer & Theme config files MUST be included after core stylesheets and helpers.js in the <head> section -->
+    <!--? Config:  Mandatory theme config file contain global vars & default theme options, Set your preferred theme option in this file.  -->
+    <script src="assets/js/config.js"></script>
+    <script src="backend/manage_session.js"></script>
+
+  </head>
+
+  <body>
+    <!-- Layout wrapper -->
+    <div class="layout-wrapper layout-content-navbar">
+      <div class="layout-container">
+        <!-- Menu -->
+
+        <aside id="layout-menu" class="layout-menu menu-vertical menu bg-menu-theme">
+          <div class="app-brand demo">
+            <a href="index.html" class="app-brand-link">
+              <img src="assets/img/logo.svg" alt="">
+            </a>
+
+            <a href="javascript:void(0);" class="layout-menu-toggle menu-link text-large ms-auto d-block d-xl-none">
+              <i class="bx bx-chevron-left bx-sm align-middle"></i>
+            </a>
+          </div>
+
+          <div class="menu-inner-shadow"></div>
+
+          <ul class="menu-inner py-1 mt-3">
+            <!-- Apps -->
+            <li class="menu-item active">
+              <a
+                href="index.html"
+                class="menu-link">
+                <i class="menu-icon tf-icons bx bx-list-check"></i>
+                <div data-i18n="Email">Reservation</div>
+                <!-- <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div> -->
+              </a>
+            </li>
+
+            <li class="menu-item mt-3">
+              <a
+                href="history.html"
+                class="menu-link">
+                <i class="menu-icon tf-icons bx bx-detail"></i>
+                <div data-i18n="Email">Parking History</div>
+                <!-- <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div> -->
+              </a>
+            </li>
+            
+
+            <li class="menu-item mt-3">
+              <a
+              href="customers.html"
+              
+                class="menu-link">
+                <i class="menu-icon tf-icons bx bx-user"></i>
+                <div data-i18n="Email">Customers Info</div>
+                <!-- <div class="badge bg-label-primary fs-tiny rounded-pill ms-auto">Pro</div> -->
+              </a>
+            </li>
+
+
+            
+          </ul>
+        </aside>
+        <!-- / Menu -->
+
+        <!-- Layout container -->
+        <div class="layout-page">
+          <!-- Navbar -->
+
+          <nav
+            class="layout-navbar container-xxl navbar navbar-expand-xl navbar-detached align-items-center bg-navbar-theme"
+            id="layout-navbar">
+            <div class="layout-menu-toggle navbar-nav align-items-xl-center me-3 me-xl-0 d-xl-none">
+              <a class="nav-item nav-link px-0 me-xl-4" href="javascript:void(0)">
+                <i class="bx bx-menu bx-sm"></i>
+              </a>
+            </div>
+
+            <div class="navbar-nav-right d-flex align-items-center" id="navbar-collapse">
+              <!-- Search -->
+              <div class="navbar-nav align-items-center">
+                <div class="nav-item d-flex align-items-center">
+                  <i class="bx bx-search fs-4 lh-0"></i>
+                  <input
+                    type="text"
+                    class="form-control border-0 shadow-none ps-1 ps-sm-2"
+                    placeholder="Search..."
+                    aria-label="Search..." />
+                </div>
+              </div>
+              <!-- /Search -->
+
+              <ul class="navbar-nav flex-row align-items-center ms-auto">
+                <!-- User -->
+                <li class="nav-item navbar-dropdown dropdown-user dropdown">
+                  <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);" data-bs-toggle="dropdown">
+                    <div class="avatar avatar-online">
+                      <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                    </div>
+                  </a>
+                  <ul class="dropdown-menu dropdown-menu-end">
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <div class="d-flex">
+                          <div class="flex-shrink-0 me-3">
+                            <div class="avatar avatar-online">
+                              <img src="assets/img/avatars/1.png" alt class="w-px-40 h-auto rounded-circle" />
+                            </div>
+                          </div>
+                          <div class="flex-grow-1">
+                            <span class="fw-medium d-block">John Doe</span>
+                            <small class="text-muted">Admin</small>
+                          </div>
+                        </div>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-user me-2"></i>
+                        <span class="align-middle">My Profile</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <i class="bx bx-cog me-2"></i>
+                        <span class="align-middle">Settings</span>
+                      </a>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="#">
+                        <span class="d-flex align-items-center align-middle">
+                          <i class="flex-shrink-0 bx bx-credit-card me-2"></i>
+                          <span class="flex-grow-1 align-middle ms-1">Billing</span>
+                          <span class="flex-shrink-0 badge badge-center rounded-pill bg-danger w-px-20 h-px-20">4</span>
+                        </span>
+                      </a>
+                    </li>
+                    <li>
+                      <div class="dropdown-divider"></div>
+                    </li>
+                    <li>
+                      <a class="dropdown-item" href="login.html">
+                        <i class="bx bx-power-off me-2"></i>
+                        <span class="align-middle">Log Out</span>
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+                <!--/ User -->
+              </ul>
+            </div>
+          </nav>
+
+          <!-- / Navbar -->
+
+          <!-- Content wrapper -->
+          <div class="content-wrapper">
+            <!-- Content -->
+
+            <div class="container-xxl flex-grow-1 container-p-y">
+              <div class="row">
+                <div class="col-lg-12 mb-4 order-0">
+
+                  <div class="card">
+                    <div class="card-body">
+                    <h3 class="mb-5">Reservation</h3>
+                    <ul class="nav nav-tabs mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active d-flex gap-2" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-1" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
+                                <img src="assets/img/book-icon.svg" alt="">
+                                Booked
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link d-flex gap-2" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-2" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            <img src="assets/img/locked-icon.svg" alt="">
+                            Reserved
+                          </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link d-flex gap-2" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-3" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            <img src="assets/img/locked-icon.svg" alt="">
+                            Occupied
+                          </button>
+                        </li>
+
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link d-flex gap-2" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-4" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                                <img src="assets/img/available-icon.svg" alt="">
+                                Available
+                            </button>
+                          </li>
+                      </ul>
+                      <div class="tab-content p-0 py-3" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-1" role="tabpanel" aria-labelledby="pills-home-tab">
+                            <table class="table table-responsive table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Vehicle Info</th>
+                                        <th>Time In</th>
+                                        <th>Timestamp</th>
+                                        <th>Slot</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <!-- <tbody>
+                                    <tr>
+                                        <td>1</td>
+                                        <td>May ThuTHIS?</td>
+                                        <td>3R 2345 BMW (Black)</td>
+                                        <td>14:56</td>
+                                        <td>02-25-2024 09:45:23</td>
+                                        <th>AA1</th>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary rounded" style="background-color: #6695FF; border-color: #6695FF;">Confirm</button>
+                                            &nbsp;
+                                            <button class="btn btn-sm btn-danger rounded">Reject</button>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>2</td>
+                                        <td>BEE BEE</td>
+                                        <td>3R 2345 Toyota (Black)</td>
+                                        <td>14:56</td>
+                                        <td>02-25-2024 09:45:23</td>
+                                        <th>AA2</th>
+                                        <td>
+                                            <button class="btn btn-sm btn-primary rounded" style="background-color: #6695FF; border-color: #6695FF;">Confirm</button>
+                                            &nbsp;
+                                            <button class="btn btn-sm btn-danger rounded">Reject</button>
+                                        </td>
+                                    </tr>
+                                </tbody> -->
+                                <tbody id="reservationTableBody">
+                                  <!-- Your table rows will be added dynamically by the script -->
+                                </tbody>
+                                
+                            </table>
+                        </div>
+                        <div class="tab-pane fade" id="pills-2" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Thadoe Heinddddddddddddddddddd
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        May Thu Khin
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Jess
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Mei
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        May
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Paul
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Teddy
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Meow
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Arrive</button>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-3" role="tabpanel" aria-labelledby="pills-contact-tab">
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Keke
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Thadoe Hein
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Kemuri
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Xiao Xue
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Shawn
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Spark
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        DoDo
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+
+                                <div class="col-3">
+                                    <div class="custom-card">
+                                       <b>
+                                        Dee
+                                       </b>
+                                       <br/>
+                                       ID: 3123 <br/>
+                                       Car No: 3123 <br/>
+                                       Phone No: 3123 <br/>
+                                       <button class="btn btn-sm btn-primary shadow-none mt-2">Leave</button>
+
+                                    </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+                        <div class="tab-pane fade" id="pills-4" role="tabpanel" aria-labelledby="pills-contact-tab">
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <div class="custom-card text-center" style="border-right: 1px solid rgba(0,0,0,0.1);">
+                                       <h5 class="">Building 1</h5>
+                                       <p><span class="badge" style="background-color: #6695FF;">3</span> Spaces Available</p>
+                                       <button class="btn btn-primary shadow-none py-1 px-4" style="border-radius:100px;background-color:  #6695FF; border-color: #6695FF;"data-bs-toggle="modal" data-bs-target="#reserveModal">Edit details</button>
+                                    </div>
+                                </div>
+                                </div>
+                                
+                            </div>
+                        </div>
+
+
+                        <!-- Modal -->
+                        <div class="modal fade " id="reserveModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Occupy Spot</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form action="">
+                                        <div class="form-group mb-3">
+                                            <label for="">Name*</label>
+                                            <input type="text" class="form-control form-contorl-sm">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="">Phone*</label>
+                                            <input type="text" class="form-control form-contorl-sm">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="">Vehicle Info*</label>
+                                            <input type="text" class="form-control form-contorl-sm">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="">Time In</label>
+                                            <input type="time" class="form-control form-contorl-sm">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="">Building</label>
+                                            <input type="text" disabled value="Building 1" class="form-control form-contorl-sm">
+                                        </div>
+
+                                        <div class="form-group mb-3">
+                                            <label for="">Remarks</label>
+                                            <textarea type="textarea" class="form-control form-contorl-sm"></textarea>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn" style="border-radius: 100px;" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" class="btn btn-primary" style="border-radius: 100px;">Save changes</button>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- / Content -->
+
+
+            <div class="content-backdrop fade"></div>
+          </div>
+          <!-- Content wrapper -->
+        </div>
+        <!-- / Layout page -->
+      </div>
+
+      <!-- Overlay -->
+      <div class="layout-overlay layout-menu-toggle"></div>
+    </div>
+    <!-- / Layout wrapper -->
+
+
+    <!-- Core JS -->
+    <!-- build:js assets/vendor/js/core.js -->
+
+    <script src="assets/vendor/libs/jquery/jquery.js"></script>
+    <script src="assets/vendor/libs/popper/popper.js"></script>
+    <script src="assets/vendor/js/bootstrap.js"></script>
+    <script src="assets/vendor/libs/perfect-scrollbar/perfect-scrollbar.js"></script>
+    <script src="assets/vendor/js/menu.js"></script>
+    <script src="backend/show_bookings.js"></script>
+
+    <!-- endbuild -->
+
+    <!-- Vendors JS -->
+    <script src="assets/vendor/libs/apex-charts/apexcharts.js"></script>
+
+    <!-- Main JS -->
+    <script src="assets/js/main.js"></script>
+
+    <!-- Page JS -->
+    <script src="assets/js/dashboards-analytics.js"></script>
+
+    <!-- Place this tag in your head or just before your close body tag. -->
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+  </body>
+</html>

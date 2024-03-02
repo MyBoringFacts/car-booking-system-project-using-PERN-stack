@@ -4,6 +4,7 @@ const express = require("express");
 const app = express();
 const bcrypt = require("bcrypt");
 const db = require("./db/index.js");
+const sessionManager = require("./sessionManager.js");
 app.use(express.json());
 app.use(cors());
 const port_number = process.env.PORT || 5001;
@@ -682,10 +683,6 @@ app.put("/api/v1/staff/:id", async (req, res) => {
   }
 });
 
-const buildingInfoModule = require("../CarRev/staff/backend/userstate.js");
-
-// Login
-
 // app.post("/api/v1/staff/login", async (req, res) => {
 //   const { username, password } = req.body;
 
@@ -767,6 +764,16 @@ app.post("/api/v1/staff/login", async (req, res) => {
     // Staff details
     const staffDetails = results.rows[0];
 
+    // Set session data
+    sessionManager.setSession({
+      staff_id: staffDetails.staff_id,
+      staff_first_name: staffDetails.staff_first_name,
+      staff_last_name: staffDetails.staff_last_name,
+      staff_ph_no: staffDetails.staff_ph_no,
+      staff_address: staffDetails.staff_address,
+      staff_email: staffDetails.staff_email,
+      building_id: staffDetails.building_id,
+    });
     // Login successful, send the response
     res.status(200).json({
       status: "success",
@@ -783,6 +790,7 @@ app.post("/api/v1/staff/login", async (req, res) => {
         },
       },
     });
+    console.log(sessionManager.getSession());
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -809,161 +817,161 @@ app.post("/api/v1/staff/login", async (req, res) => {
 //***********************************************************************************
 // **********************************************************************************
 //***********************************************************************************
-// **********************************************************************************
+// // **********************************************************************************
 
-// Create operation for a new building
-app.post("/api/v1/buildings", async (req, res) => {
-  try {
-    const { building_address, building_capacity, building_name } = req.body;
+// // Create operation for a new building
+// app.post("/api/v1/buildings", async (req, res) => {
+//   try {
+//     const { building_address, building_capacity, building_name } = req.body;
 
-    const results = await db.query(
-      `INSERT INTO building
-       (building_address, building_capacity, building_name)
-       VALUES ($1, $2, $3)
-       RETURNING *;`,
-      [building_address, building_capacity, building_name]
-    );
+//     const results = await db.query(
+//       `INSERT INTO building
+//        (building_address, building_capacity, building_name)
+//        VALUES ($1, $2, $3)
+//        RETURNING *;`,
+//       [building_address, building_capacity, building_name]
+//     );
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        building: results.rows[0],
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         building: results.rows[0],
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
-// Read operation for all buildings
-app.get("/api/v1/buildings", async (req, res) => {
-  try {
-    const results = await db.query(`SELECT * FROM building;`);
+// // Read operation for all buildings
+// app.get("/api/v1/buildings", async (req, res) => {
+//   try {
+//     const results = await db.query(`SELECT * FROM building;`);
 
-    res.status(200).json({
-      status: "success",
-      data: results.rows,
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     res.status(200).json({
+//       status: "success",
+//       data: results.rows,
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
-// Read operation for a specific building
-app.get("/api/v1/buildings/:buildingId", async (req, res) => {
-  const buildingId = req.params.buildingId;
+// // Read operation for a specific building
+// app.get("/api/v1/buildings/:buildingId", async (req, res) => {
+//   const buildingId = req.params.buildingId;
 
-  try {
-    const results = await db.query(
-      `SELECT * FROM building
-       WHERE building_id = $1;`,
-      [buildingId]
-    );
+//   try {
+//     const results = await db.query(
+//       `SELECT * FROM building
+//        WHERE building_id = $1;`,
+//       [buildingId]
+//     );
 
-    if (results.rows.length === 0) {
-      res.status(404).json({
-        status: "error",
-        message: "Building not found",
-      });
-    } else {
-      res.status(200).json({
-        status: "success",
-        data: {
-          building: results.rows[0],
-        },
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     if (results.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Building not found",
+//       });
+//     } else {
+//       res.status(200).json({
+//         status: "success",
+//         data: {
+//           building: results.rows[0],
+//         },
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
-// Update operation for a specific building
-app.put("/api/v1/buildings/:buildingId", async (req, res) => {
-  const buildingId = req.params.buildingId;
+// // Update operation for a specific building
+// app.put("/api/v1/buildings/:buildingId", async (req, res) => {
+//   const buildingId = req.params.buildingId;
 
-  try {
-    const { building_address, building_capacity, building_name } = req.body;
+//   try {
+//     const { building_address, building_capacity, building_name } = req.body;
 
-    const results = await db.query(
-      `UPDATE building
-       SET building_address = $1,
-           building_capacity = $2,
-           building_name = $3
-       WHERE building_id = $4
-       RETURNING *;`,
-      [building_address, building_capacity, building_name, buildingId]
-    );
+//     const results = await db.query(
+//       `UPDATE building
+//        SET building_address = $1,
+//            building_capacity = $2,
+//            building_name = $3
+//        WHERE building_id = $4
+//        RETURNING *;`,
+//       [building_address, building_capacity, building_name, buildingId]
+//     );
 
-    if (results.rows.length === 0) {
-      res.status(404).json({
-        status: "error",
-        message: "Building not found",
-      });
-    } else {
-      res.status(200).json({
-        status: "success",
-        message: "Building updated successfully",
-        data: {
-          building: results.rows[0],
-        },
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     if (results.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Building not found",
+//       });
+//     } else {
+//       res.status(200).json({
+//         status: "success",
+//         message: "Building updated successfully",
+//         data: {
+//           building: results.rows[0],
+//         },
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
-// Delete operation for a specific building
-app.delete("/api/v1/buildings/:buildingId", async (req, res) => {
-  const buildingId = req.params.buildingId;
+// // Delete operation for a specific building
+// app.delete("/api/v1/buildings/:buildingId", async (req, res) => {
+//   const buildingId = req.params.buildingId;
 
-  try {
-    const results = await db.query(
-      `DELETE FROM building
-       WHERE building_id = $1
-       RETURNING *;`,
-      [buildingId]
-    );
+//   try {
+//     const results = await db.query(
+//       `DELETE FROM building
+//        WHERE building_id = $1
+//        RETURNING *;`,
+//       [buildingId]
+//     );
 
-    if (results.rows.length === 0) {
-      res.status(404).json({
-        status: "error",
-        message: "Building not found",
-      });
-    } else {
-      res.status(200).json({
-        status: "success",
-        message: "Building deleted successfully",
-        data: {
-          building: results.rows[0],
-        },
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     if (results.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Building not found",
+//       });
+//     } else {
+//       res.status(200).json({
+//         status: "success",
+//         message: "Building deleted successfully",
+//         data: {
+//           building: results.rows[0],
+//         },
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
 //***********************************************************************************
 // **********************************************************************************
@@ -1169,4 +1177,569 @@ app.delete("/api/v1/buildings/:buildingId/slots/:slotId", async (req, res) => {
 //***********************************************************************************
 // **********************************************************************************
 //***********************************************************************************
-// **********************************************************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+
+// *******************************************
+// *******************************************
+// *******************************************
+
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+// *******************************************
+
+//for sessions
+app.post("/api/v1/sessions", async (req, res) => {
+  const {
+    car_id,
+    slot_id,
+    arrival_time,
+    end_time,
+    building_id,
+    book_time,
+    staff_auth,
+  } = req.body;
+
+  // If book_time is not provided, use the current system time
+  const currentBookTime = book_time || new Date();
+
+  // If staff_auth is not provided, default to "unverified"
+  const staffAuth = staff_auth || "unverified";
+
+  try {
+    const result = await db.query(
+      `INSERT INTO session (car_id,slot_id, arrival_time, building_id, book_time, staff_auth)
+       VALUES ($1, $2, $3, $4, $5, $6,$7)
+       RETURNING *;`,
+      [
+        car_id,
+        slot_id,
+        arrival_time,
+        end_time,
+        building_id,
+        currentBookTime,
+        staffAuth,
+      ]
+    );
+
+    res.status(201).json({
+      status: "success",
+      data: {
+        booking: result.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/buildings/:buildingId/sessions", async (req, res) => {
+  const buildingId = req.params.buildingId;
+
+  try {
+    const results = await db.query(
+      `SELECT * FROM session
+       WHERE building_id = $1;`,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        bookings: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/sessions/history", async (req, res) => {
+  const session_id = req.params.sessionId;
+  const temp = sessionManager.getSession();
+
+  const buildingId = temp?.building_id ?? 1;
+
+  try {
+    const results = await db.query(
+      `SELECT 
+      *,  
+      CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
+      CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info,
+      TO_CHAR(session.arrival_time, 'YYYY-MM-DD HH24:MI') AS arrival_time,
+      TO_CHAR(session.end_time, 'YYYY-MM-DD HH24:MI') AS end_time,
+      TO_CHAR(session.book_time, 'YYYY-MM-DD HH24:MI') AS book_time
+  FROM 
+      session
+  JOIN 
+      car ON session.car_id = car.car_id
+  JOIN 
+      customer ON car.customer_id = customer.customer_id
+  WHERE 
+      session.building_id = $1
+      AND end_time < CURRENT_TIMESTAMP
+  ORDER BY 
+      session.end_time DESC;
+  
+       `,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        bookings: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.put("/api/v1/sessions/:sesssionId", async (req, res) => {
+  const bookingId = req.params.sesssionId;
+  const { arrival_time, end_time } = req.body;
+
+  try {
+    const result = await db.query(
+      `UPDATE session
+       SET arrival_time = $1, end_time = $2
+       WHERE session_id = $3
+       RETURNING *;`,
+      [arrival_time, end_time, bookingId]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Booking not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          booking: result.rows[0],
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.put("/api/v1/sessions/:sesssionId/pressAccept", async (req, res) => {
+  const sessionId = req.params.sesssionId;
+  try {
+    const result = await db.query(
+      `UPDATE session
+       SET staff_auth = 'accepted'
+       WHERE session_id = $1
+       RETURNING *;`,
+      [sessionId]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Booking not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          booking: result.rows[0],
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.delete("/api/v1/sessions/:sessionId", async (req, res) => {
+  const bookingId = req.params.sessionId;
+
+  try {
+    const result = await db.query(
+      `DELETE FROM session
+       WHERE session_id = $1
+       RETURNING *;`,
+      [bookingId]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Booking not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          message: "Booking canceled successfully",
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get(
+  "/api/v1/buildings/:buildingId/unverified-sessions",
+  async (req, res) => {
+    const temp = sessionManager.getSession();
+    // if (temp) {
+    //   const staffId = temp.staff_first_name;
+    //   console.log(staffId);
+    // } else {
+    //   console.log("thjere is no session");
+    // }
+    // Get buildingId from the sessionManager
+
+    const buildingId = temp?.building_id ?? 1;
+
+    try {
+      if (!buildingId) {
+        return res.status(400).json({
+          status: "error",
+          message: "Building ID not found in the session",
+        });
+      }
+
+      // const results = await db.query(
+      //   `SELECT session.*, CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name
+      //     FROM session
+      //     JOIN car ON session.car_id = car.car_id
+      //     JOIN customer ON car.customer_id = customer.customer_id
+      //     WHERE session.building_id = $1
+      //     AND session.staff_auth = 'unverified';`,
+      //   [buildingId]
+      // );
+      const results = await db.query(
+        `SELECT session.*, CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
+                                  CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info,
+                                  TO_CHAR(session.arrival_time, 'YYYY-MM-DD HH24:MI') AS arrival_time,
+                                  TO_CHAR(session.end_time, 'YYYY-MM-DD HH24:MI') AS end_time,
+                                  TO_CHAR(session.book_time, 'YYYY-MM-DD HH24:MI') AS book_time
+                                  
+                                  
+       
+          FROM session
+          JOIN car ON session.car_id = car.car_id
+          JOIN customer ON car.customer_id = customer.customer_id
+          WHERE session.building_id = $1
+          AND session.staff_auth = 'unverified'
+          ORDER BY session.book_time ASC;;`,
+        [buildingId]
+      );
+
+      res.status(200).json({
+        status: "success",
+        data: {
+          unverifiedSessions: results.rows,
+        },
+      });
+    } catch (err) {
+      console.error(err.message);
+      res.status(500).json({
+        status: "error",
+        message: "Internal Server Error",
+      });
+    }
+  }
+);
+
+app.get("/api/v1/buildings/:buildingId/accepted-sessions", async (req, res) => {
+  const temp = sessionManager.getSession();
+  // if (temp) {
+  //   const staffId = temp.staff_first_name;
+  //   console.log(staffId);
+  // } else {
+  //   console.log("thjere is no session");
+  // }
+  // Get buildingId from the sessionManager
+  const buildingId = temp?.building_id ?? 1;
+
+  try {
+    if (!buildingId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Building ID not found in the session",
+      });
+    }
+    const results = await db.query(
+      `SELECT session.*, CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
+                                  CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info,
+                                  TO_CHAR(session.arrival_time, 'YYYY-MM-DD HH24:MI') AS arrival_time,
+                                  TO_CHAR(session.start_time, 'YYYY-MM-DD HH24:MI') AS start_time,
+                                  TO_CHAR(session.end_time, 'YYYY-MM-DD HH24:MI') AS end_time,
+                                  TO_CHAR(session.book_time, 'YYYY-MM-DD HH24:MI') AS book_time,
+                                  customer.customer_ph_no as customer_ph_no,
+                                  customer.customer_id as customer_id
+                                  
+       
+          FROM session
+          JOIN car ON session.car_id = car.car_id
+          JOIN customer ON car.customer_id = customer.customer_id
+          WHERE session.building_id = $1
+          AND session.staff_auth = 'accepted'
+          AND arrival_time IS null
+          ORDER BY session.book_time ASC;`,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        acceptedSessions: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/buildings/:buildingId/occupied-sessions", async (req, res) => {
+  const temp = sessionManager.getSession();
+  // if (temp) {
+  //   const staffId = temp.staff_first_name;
+  //   console.log(staffId);
+  // } else {
+  //   console.log("thjere is no session");
+  // }
+  // Get buildingId from the sessionManager
+  const buildingId = temp?.building_id ?? 1;
+
+  try {
+    if (!buildingId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Building ID not found in the session",
+      });
+    }
+    const results = await db.query(
+      `SELECT session.*, CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
+                                  CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info,
+                                  TO_CHAR(session.arrival_time, 'YYYY-MM-DD HH24:MI') AS arrival_time,
+                                  TO_CHAR(session.start_time, 'YYYY-MM-DD HH24:MI') AS start_time,
+                                  TO_CHAR(session.end_time, 'YYYY-MM-DD HH24:MI') AS end_time,
+                                  TO_CHAR(session.book_time, 'YYYY-MM-DD HH24:MI') AS book_time,
+                                  customer.customer_ph_no as customer_ph_no,
+                                  customer.customer_id as customer_id
+                                  
+       
+          FROM session
+          JOIN car ON session.car_id = car.car_id
+          JOIN customer ON car.customer_id = customer.customer_id
+          WHERE session.building_id = $1
+          AND session.staff_auth = 'accepted'
+          AND arrival_time IS NOT null
+          AND end_time IS null
+          ORDER BY session.book_time ASC;`,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        acceptedSessions: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.put("/api/v1/sessions/:sesssionId/terminate", async (req, res) => {
+  const bookingId = req.params.sesssionId;
+  const { end_time } = req.body;
+
+  try {
+    const result = await db.query(
+      `UPDATE session
+       SET  end_time = $1
+       WHERE session_id = $2
+       RETURNING *;`,
+      [end_time, bookingId]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Booking not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          booking: result.rows[0],
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/buildings/:buildingId/customers", async (req, res) => {
+  const temp = sessionManager.getSession();
+  // if (temp) {
+  //   const staffId = temp.staff_first_name;
+  //   console.log(staffId);
+  // } else {
+  //   console.log("thjere is no session");
+  // }
+  // Get buildingId from the sessionManager
+  const reqBuildingId = req.params.buildingId;
+  const buildingId = temp?.building_id ?? reqBuildingId;
+
+  try {
+    if (!buildingId) {
+      return res.status(400).json({
+        status: "error",
+        message: "Building ID not found in the session",
+      });
+    }
+    const results = await db.query(
+      `SELECT customer.*, car.car_id,        
+      CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
+      CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info
+                                  
+       
+          FROM customer
+          JOIN car ON customer.customer_id = car.customer_id
+          LEFT JOIN session ON car.car_id = session.car_id
+          WHERE session.building_id = $1 OR session.building_id IS NULL
+          ORDER BY customer.customer_id ASC, car.car_id ASC;`,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        customers: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/buildings/slotDetails", async (req, res) => {
+  console.log("Inside the route callback");
+  try {
+    const temp = sessionManager.getSession();
+    console.log("Session:", temp);
+
+    const buildingId = temp?.building_id ?? 1;
+    console.log("Building ID:", buildingId);
+
+    const results = await db.query(
+      `SELECT
+        COUNT(*) AS total_slots,
+        SUM(CASE WHEN slot_status = TRUE THEN 1 ELSE 0 END) AS total_available_slots,
+        SUM(CASE WHEN slot_status = FALSE THEN 1 ELSE 0 END) AS total_occupied_slots
+      FROM Slot
+      WHERE building_id = $1`,
+      [parseInt(buildingId)]
+    );
+
+    const { total_slots, total_available_slots, total_occupied_slots } =
+      results.rows[0];
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        totalSlots: total_slots,
+        totalAvailableSlots: total_available_slots,
+        totalOccupiedSlots: total_occupied_slots,
+      },
+    });
+  } catch (err) {
+    console.error("Error:", err);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.get("/api/v1/buildings/availiablespots", async (req, res) => {
+  const temp = sessionManager.getSession();
+
+  const buildingId = temp?.building_id ?? 1;
+
+  try {
+    const results = await db.query(
+      `SELECT * FROM nslot
+          
+          WHERE
+              slot.building_id = $1
+              AND Slot.slot_status = TRUE;`,
+      [buildingId]
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        availableSessions: results.rows,
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
