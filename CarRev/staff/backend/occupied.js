@@ -16,8 +16,7 @@ document.addEventListener("DOMContentLoaded", function () {
     console.log("Button clicked for session ID:", sessionId);
 
     const apiUrl = `http://localhost:5000/api/v1/sessions/${sessionId}/terminate`;
-    const systemTime = new Date().toISOString(); // Get the current system time
-    // const sessionId = $(this).data("session-id");
+    const systemTime = new Date(); // Use the current system time directly without converting to ISO string
 
     try {
       const response = await fetch(apiUrl, {
@@ -26,9 +25,8 @@ document.addEventListener("DOMContentLoaded", function () {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          end_time: systemTime,
+          end_time: systemTime.toISOString(), // Convert systemTime to ISO string
           session_id: sessionId,
-          // Ending time is set to null
         }),
       });
 
@@ -40,11 +38,11 @@ document.addEventListener("DOMContentLoaded", function () {
         removeCard(buttonElement);
       } else {
         console.error("Termination failed:", result.message);
-        // Handle the case where the arrival fails
+        // Handle the case where the termination fails
       }
     } catch (error) {
       console.error("Error during Termination:", error);
-      // Handle the case where an error occurs during the arrival process
+      // Handle the case where an error occurs during the termination process
     }
   }
 
@@ -71,7 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
       customCard.innerHTML = `
         <div class="custom-card">
                    <b>${session.owner_name}  [ID:${session.customer_id} ]</b><br />
-                   Book Time: ${session.book_time} <br />
+                   Book Time: ${session.start_time} <br />
+                   Arrival Time: ${session.arrival_time} <br />
                   Slot : ${session.slot_id} <br />
                   Car Info: ${session.car_info} [ID:${session.car_id}]  <br />
                

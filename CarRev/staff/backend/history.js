@@ -34,6 +34,7 @@ $(document).ready(function () {
             <td>${session.car_info}</td>
             <td>${session.arrival_time}</td>
             <td>${session.end_time}</td>
+            <td>${session.charge}</td>
             <td>${session.slot_id}</td>
             <td>
               <button class="btn btn-sm btn-danger rounded delete-btn" data-session-id="${session.session_id}" style="background-color: #6695FF; border-color: #6695FF;">Delete</button>

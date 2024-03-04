@@ -56,6 +56,35 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  async function customerNotArriveButtonClick(sessionId, buttonElement) {
+    console.log("Button clicked for session ID:", sessionId);
+    // http://localhost:5000/api/v1/sessions/pressReject/:sessionId
+    const apiUrl = `http://localhost:5000/api/v1/sessions/pressReject/${sessionId}`;
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        console.log("Customer not arrive successful:", result);
+        // Remove the corresponding card from the DOM
+        removeCard(buttonElement);
+      } else {
+        console.error("Customer not arrive failed:", result.message);
+        // Handle the case where the customer not arrive fails
+      }
+    } catch (error) {
+      console.error("Error during customer not arrive:", error);
+      // Handle the case where an error occurs during the customer not arrive process
+    }
+  }
+
   // Function to update the accepted list with the fetched data
   async function updateAcceptedList() {
     const acceptedSessions = await fetchData();
@@ -78,6 +107,7 @@ document.addEventListener("DOMContentLoaded", function () {
                Phone No: ${session.customer_ph_no}<br/>
                <div style="padding-top: 10px ">
                <button class="btn btn-primary" data-session-id="${session.session_id}">Arrive</button>
+               <button class="btn btn-danger" data-session-id="${session.session_id}">Customer Not Arrive</button>
           </div>
         </div>
       `;
@@ -86,6 +116,12 @@ document.addEventListener("DOMContentLoaded", function () {
       arriveButton.addEventListener("click", (event) => {
         const sessionId = event.target.getAttribute("data-session-id");
         arriveButtonClick(sessionId, event.target);
+      });
+
+      const notArriveButton = customCard.querySelector(".btn-danger");
+      notArriveButton.addEventListener("click", (event) => {
+        const sessionId = event.target.getAttribute("data-session-id");
+        customerNotArriveButtonClick(sessionId, event.target);
       });
     });
   }

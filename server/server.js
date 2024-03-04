@@ -12,60 +12,60 @@ app.listen(port_number, () => {
   console.log(`Server is up on ${port_number}`);
 });
 
-//GET ALL CUSTOMER;
-app.get("/api/v1/customer", async (req, res) => {
-  try {
-    const results = await db.query(`SELECT * FROM customer;`);
+// //GET ALL CUSTOMER;
+// app.get("/api/v1/customer", async (req, res) => {
+//   try {
+//     const results = await db.query(`SELECT * FROM customer;`);
 
-    res.status(200).json({
-      status: "success",
-      data: results.rows.map((customer) => ({
-        customer_id: customer.customer_id,
-        customer_first_name: customer.customer_first_name,
-        customer_last_name: customer.customer_last_name,
-        customer_ph_no: customer.customer_ph_no,
-        customer_email: customer.customer_email,
-        customer_password: customer.customer_password,
-      })),
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     res.status(200).json({
+//       status: "success",
+//       data: results.rows.map((customer) => ({
+//         customer_id: customer.customer_id,
+//         customer_first_name: customer.customer_first_name,
+//         customer_last_name: customer.customer_last_name,
+//         customer_ph_no: customer.customer_ph_no,
+//         customer_email: customer.customer_email,
+//         customer_password: customer.customer_password,
+//       })),
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
-//GET ONE CUSTOMER;
-app.get("/api/v1/customer/:id", async (req, res) => {
-  try {
-    const results = await db.query(
-      `SELECT * FROM customer WHERE customer_id =  $1;`,
-      [req.params.id]
-    );
+// //GET ONE CUSTOMER;
+// app.get("/api/v1/customer/:id", async (req, res) => {
+//   try {
+//     const results = await db.query(
+//       `SELECT * FROM customer WHERE customer_id =  $1;`,
+//       [req.params.id]
+//     );
 
-    res.status(200).json({
-      status: "success",
-      data: results.rows.map((customer) => ({
-        customer_id: customer.customer_id,
-        customer_first_name: customer.customer_first_name,
-        customer_last_name: customer.customer_last_name,
-        customer_ph_no: customer.customer_ph_no,
-        customer_address: customer.customer_address,
-        customer_email: customer.customer_email,
-        customer_password: customer.customer_password,
-      })),
-    });
-    console.log("GET OPERATION SUCCESS");
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
+//     res.status(200).json({
+//       status: "success",
+//       data: results.rows.map((customer) => ({
+//         customer_id: customer.customer_id,
+//         customer_first_name: customer.customer_first_name,
+//         customer_last_name: customer.customer_last_name,
+//         customer_ph_no: customer.customer_ph_no,
+//         customer_address: customer.customer_address,
+//         customer_email: customer.customer_email,
+//         customer_password: customer.customer_password,
+//       })),
+//     });
+//     console.log("GET OPERATION SUCCESS");
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
 
 //Update a customer
 app.put("/api/v1/customer/:id", async (req, res) => {
@@ -424,136 +424,136 @@ app.delete("/api/v1/customer/:customerId/cars/:carId", async (req, res) => {
 //***********************************************************************************
 // **********************************************************************************
 
-//Create a staff
-app.post("/api/v1/staff", async (req, res) => {
-  const {
-    staff_first_name,
-    staff_last_name,
-    staff_ph_no,
-    staff_address,
-    staff_email,
-    staff_password,
-    building_id,
-  } = req.body;
+// //Create a staff
+// app.post("/api/v1/staff", async (req, res) => {
+//   const {
+//     staff_first_name,
+//     staff_last_name,
+//     staff_ph_no,
+//     staff_address,
+//     staff_email,
+//     staff_password,
+//     building_id,
+//   } = req.body;
 
-  try {
-    const results = await db.query(
-      "INSERT INTO Staff(staff_first_name, staff_last_name, staff_ph_no, staff_address, staff_email, staff_password, building_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *",
-      [
-        staff_first_name,
-        staff_last_name,
-        staff_ph_no,
-        staff_address,
-        staff_email,
-        staff_password,
-        building_id,
-      ]
-    );
+//   try {
+//     const results = await db.query(
+//       "INSERT INTO Staff(staff_first_name, staff_last_name, staff_ph_no, staff_address, staff_email, staff_password, building_id) VALUES($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+//       [
+//         staff_first_name,
+//         staff_last_name,
+//         staff_ph_no,
+//         staff_address,
+//         staff_email,
+//         staff_password,
+//         building_id,
+//       ]
+//     );
 
-    res.status(201).json({
-      status: "success",
-      data: {
-        staff: results.rows[0],
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-    console.log("POST OPERATION FAILED");
-  }
-});
+//     res.status(201).json({
+//       status: "success",
+//       data: {
+//         staff: results.rows[0],
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//     console.log("POST OPERATION FAILED");
+//   }
+// });
 
-//get a staff within a building
-app.get("/api/v1/staff/building/:building_id", async (req, res) => {
-  const buildingId = req.params.building_id;
+// //get a staff within a building
+// app.get("/api/v1/staff/building/:building_id", async (req, res) => {
+//   const buildingId = req.params.building_id;
 
-  try {
-    const results = await db.query(
-      "SELECT * FROM Staff WHERE building_id = $1",
-      [buildingId]
-    );
-    res.status(200).json({
-      status: "success",
-      data: {
-        staff: results.rows,
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-    console.log("GET OPERATION FAILED");
-  }
-});
+//   try {
+//     const results = await db.query(
+//       "SELECT * FROM Staff WHERE building_id = $1",
+//       [buildingId]
+//     );
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         staff: results.rows,
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//     console.log("GET OPERATION FAILED");
+//   }
+// });
 
-//get a staff by id
-app.get("/api/v1/staff/:id", async (req, res) => {
-  const staffId = req.params.id;
+// //get a staff by id
+// app.get("/api/v1/staff/:id", async (req, res) => {
+//   const staffId = req.params.id;
 
-  try {
-    const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
-      staffId,
-    ]);
-    res.status(200).json({
-      status: "success",
-      data: {
-        staff: results.rows[0],
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-    console.log("GET OPERATION FAILED");
-  }
-});
-//get all the staffs
-app.get("/api/v1/staff", async (req, res) => {
-  try {
-    const results = await db.query("SELECT * FROM Staff");
-    res.status(200).json({
-      status: "success",
-      data: {
-        staff: results.rows,
-      },
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-    console.log("GET OPERATION FAILED");
-  }
-});
-//delete a staff
-app.delete("/api/v1/staff/:id", async (req, res) => {
-  const staffId = req.params.id;
+//   try {
+//     const results = await db.query("SELECT * FROM Staff WHERE staff_id = $1", [
+//       staffId,
+//     ]);
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         staff: results.rows[0],
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//     console.log("GET OPERATION FAILED");
+//   }
+// });
+// //get all the staffs
+// app.get("/api/v1/staff", async (req, res) => {
+//   try {
+//     const results = await db.query("SELECT * FROM Staff");
+//     res.status(200).json({
+//       status: "success",
+//       data: {
+//         staff: results.rows,
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//     console.log("GET OPERATION FAILED");
+//   }
+// });
+// //delete a staff
+// app.delete("/api/v1/staff/:id", async (req, res) => {
+//   const staffId = req.params.id;
 
-  try {
-    await db.query("DELETE FROM Staff WHERE staff_id = $1", [staffId]);
-    res.status(200).json({
-      status: "success",
-      message: "Staff member deleted successfully",
-    });
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-    console.log("DELETE OPERATION FAILED");
-  }
-});
+//   try {
+//     await db.query("DELETE FROM Staff WHERE staff_id = $1", [staffId]);
+//     res.status(200).json({
+//       status: "success",
+//       message: "Staff member deleted successfully",
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//     console.log("DELETE OPERATION FAILED");
+//   }
+// });
 
-// Update a staff
+// // Update a staff
 app.put("/api/v1/staff/:id", async (req, res) => {
   const staffId = req.params.id;
 
@@ -805,6 +805,45 @@ app.post("/api/v1/staff/login", async (req, res) => {
 //   "username": "john_doe",
 //   "password": "password123"
 // }
+// Assuming you have an express app instance named 'app'
+
+// GET endpoint to retrieve details of the currently signed-in staff
+app.get("/api/v1/staff/info/me", (req, res) => {
+  try {
+    // Retrieve staff details from the session
+    const staffDetails = sessionManager.getSession();
+
+    // Check if staff is signed in
+    if (!staffDetails || !staffDetails.staff_id) {
+      return res.status(401).json({
+        status: "error",
+        message: "Not signed in",
+      });
+    }
+
+    // Send staff details in the response
+    res.status(200).json({
+      status: "success",
+      data: {
+        staff: {
+          staff_id: staffDetails.staff_id,
+          staff_first_name: staffDetails.staff_first_name,
+          staff_last_name: staffDetails.staff_last_name,
+          staff_ph_no: staffDetails.staff_ph_no,
+          staff_address: staffDetails.staff_address,
+          staff_email: staffDetails.staff_email,
+          building_id: staffDetails.building_id,
+        },
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
 
 //***********************************************************************************
 // **********************************************************************************
@@ -1131,41 +1170,6 @@ app.put("/api/v1/buildings/:buildingId/slots/:slotId", async (req, res) => {
   }
 });
 
-// Delete operation for a specific slot in a specific building
-app.delete("/api/v1/buildings/:buildingId/slots/:slotId", async (req, res) => {
-  const buildingId = req.params.buildingId;
-  const slotId = req.params.slotId;
-
-  try {
-    const results = await db.query(
-      `DELETE FROM slot
-       WHERE building_id = $1 AND slot_id = $2
-       RETURNING *;`,
-      [buildingId, slotId]
-    );
-
-    if (results.rows.length === 0) {
-      res.status(404).json({
-        status: "error",
-        message: "Slot not found",
-      });
-    } else {
-      res.status(200).json({
-        status: "success",
-        message: "Slot deleted successfully",
-        data: {
-          slot: results.rows[0],
-        },
-      });
-    }
-  } catch (err) {
-    console.error(err.message);
-    res.status(500).json({
-      status: "error",
-      message: "Internal Server Error",
-    });
-  }
-});
 //***********************************************************************************
 // **********************************************************************************
 //***********************************************************************************
@@ -1294,7 +1298,8 @@ app.get("/api/v1/sessions/history", async (req, res) => {
       customer ON car.customer_id = customer.customer_id
   WHERE 
       session.building_id = $1
-      AND end_time < CURRENT_TIMESTAMP
+      AND end_time IS NOT NULL
+      AND charge != 0
   ORDER BY 
       session.end_time DESC;
   
@@ -1592,32 +1597,93 @@ app.get("/api/v1/buildings/:buildingId/occupied-sessions", async (req, res) => {
   }
 });
 
-app.put("/api/v1/sessions/:sesssionId/terminate", async (req, res) => {
-  const bookingId = req.params.sesssionId;
+// app.put("/api/v1/sessions/:sesssionId/terminate", async (req, res) => {
+//   const bookingId = req.params.sesssionId;
+//   const { end_time } = req.body;
+
+//   try {
+//     const result = await db.query(
+//       `UPDATE session
+//        SET  end_time = $1
+//        WHERE session_id = $2
+//        RETURNING *;`,
+//       [end_time, bookingId]
+//     );
+
+//     if (result.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Booking not found",
+//       });
+//     } else {
+//       res.status(200).json({
+//         status: "success",
+//         data: {
+//           booking: result.rows[0],
+//         },
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+app.put("/api/v1/sessions/:sessionId/terminate", async (req, res) => {
+  const sessionId = req.params.sessionId;
   const { end_time } = req.body;
 
   try {
-    const result = await db.query(
+    // Update the session's end_time
+    const updateResult = await db.query(
       `UPDATE session
-       SET  end_time = $1
+       SET end_time = $1
        WHERE session_id = $2
        RETURNING *;`,
-      [end_time, bookingId]
+      [end_time, sessionId]
     );
 
-    if (result.rows.length === 0) {
-      res.status(404).json({
+    if (updateResult.rows.length === 0) {
+      return res.status(404).json({
         status: "error",
-        message: "Booking not found",
-      });
-    } else {
-      res.status(200).json({
-        status: "success",
-        data: {
-          booking: result.rows[0],
-        },
+        message: "Session not found",
       });
     }
+
+    const session = updateResult.rows[0];
+
+    // Calculate and update the charge based on arrival_time, end_time, and building's price_per_min
+    const chargeResult = await db.query(
+      `UPDATE session
+       SET charge = (
+         EXTRACT(EPOCH FROM (session.end_time - session.arrival_time)) / 60 * building.price_per_min
+       )
+       FROM building
+       WHERE session.session_id = $1
+         AND session.building_id = building.building_id
+         AND session.arrival_time IS NOT NULL
+         AND session.end_time IS NOT NULL
+       RETURNING session.*, building.price_per_min;`,
+      [sessionId]
+    );
+
+    if (chargeResult.rows.length === 0) {
+      return res.status(404).json({
+        status: "error",
+        message: "Session or building not found",
+      });
+    }
+
+    const updatedSession = chargeResult.rows[0];
+
+    return res.status(200).json({
+      status: "success",
+      data: {
+        session: updatedSession,
+      },
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -1647,7 +1713,7 @@ app.get("/api/v1/buildings/:buildingId/customers", async (req, res) => {
       });
     }
     const results = await db.query(
-      `SELECT customer.*, car.car_id,        
+      `SELECT DISTINCT customer.*, car.car_id,        
       CONCAT(customer.customer_first_name, ' ', customer.customer_last_name) AS owner_name, 
       CONCAT(car.car_license, ' ', COALESCE(car.car_model, ''), ' ', COALESCE(car.car_color, '')) AS car_info
                                   
@@ -1792,7 +1858,7 @@ app.get("/api/v1/buildings/slotsDetails", async (req, res) => {
     // Get available slots information
     const availableResults = await db.query(
       `SELECT * FROM slot
-       WHERE building_id = $1 AND slot_status = TRUE;`,
+       WHERE building_id = $1 AND slot_status = TRUE ORDER BY slot_id;`,
       [buildingId]
     );
 
@@ -1824,6 +1890,86 @@ app.get("/api/v1/buildings/slotsDetails", async (req, res) => {
         occupiedSessions: occupiedSessions,
       },
     });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+// Delete operation for a specific slot in a specific building
+app.delete("/api/v1/buildings/slots/:slotId", async (req, res) => {
+  const temp = sessionManager.getSession();
+  const buildingId = temp?.building_id;
+
+  const slotId = req.params.slotId;
+
+  try {
+    const results = await db.query(
+      `DELETE FROM slot
+       WHERE building_id = $1 AND slot_id = $2
+       RETURNING *;`,
+      [buildingId, slotId]
+    );
+
+    if (results.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Slot not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        message: "Slot deleted successfully",
+        data: {
+          slot: results.rows[0],
+        },
+      });
+    }
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+app.put("/api/v1/sessions/pressReject/:sessionId", async (req, res) => {
+  // const slotId = req.params.slotId;
+  // const buildingId = req.params.buildingId;
+  // const carId = req.params.carId;
+  const session_id = req.params.sessionId;
+
+  try {
+    const result = await db.query(
+      `UPDATE session
+       SET 
+         arrival_time = NOW(),
+         end_time = NOW(),
+         charge = 0
+       WHERE 
+        
+         session_id = $1
+       RETURNING *;`,
+      [session_id]
+    );
+
+    if (result.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Slot not found",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: {
+          slot: result.rows[0],
+        },
+      });
+    }
   } catch (err) {
     console.error(err.message);
     res.status(500).json({

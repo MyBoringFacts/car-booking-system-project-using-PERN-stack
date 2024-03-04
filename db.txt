@@ -16,6 +16,8 @@ ALTER COLUMN customer_password TYPE VARCHAR(50);
 
 
 
+
+
 CREATE TABLE Car (
     car_id SERIAL PRIMARY KEY,
     car_brand VARCHAR(25),
@@ -25,16 +27,12 @@ CREATE TABLE Car (
     customer_id  SERIAL REFERENCES CUSTOMER(customer_id)
 );
 
-
-
 CREATE TABLE Building (
     building_id SERIAL PRIMARY KEY,
     building_address VARCHAR(100) NOT NULL,
     building_capacity INTEGER,
     building_name VARCHAR(20)
 );
-
-
 CREATE TABLE Slot (
     building_id SERIAL REFERENCES Building(building_id),
     slot_id INT PRIMARY KEY ,
@@ -42,27 +40,6 @@ CREATE TABLE Slot (
     slot_status set DEFAULT true
     -- CONSTRAINT valid_capacity CHECK (slot_id <= (SELECT building_capacity FROM Building WHERE building_id = building_id))
 );
-
-
--- Create a function to check valid capacity
--- CREATE OR REPLACE FUNCTION check_valid_capacity()
--- RETURNS TRIGGER AS $$
--- BEGIN
---     IF (SELECT COUNT(*) FROM Slot WHERE building_id = NEW.building_id) > (SELECT building_capacity FROM Building WHERE building_id = NEW.building_id) THEN
---         RAISE EXCEPTION 'Capacity constraint violated';
---     END IF;
---     RETURN NEW;
--- END;
--- $$ LANGUAGE plpgsql;
-
--- -- Create a trigger to invoke the function before an insert
--- CREATE TRIGGER before_insert_check_valid_capacity
--- BEFORE INSERT ON Slot
--- FOR EACH ROW
--- EXECUTE FUNCTION check_valid_capacity();
-
-
-
 
 
 
@@ -296,8 +273,53 @@ ALTER TABLE Session ENABLE TRIGGER before_insert_update_delete_session;
 -- Inserting dummy sessions
 INSERT INTO Session (slot_id, session_id, car_id, arrival_time, end_time, building_id, book_time, start_time, staff_auth)
 VALUES
-  (1, 1, 1, NULL, NULL, 1, '2023-01-01 12:00:00', '2023-01-02 14:30:00', 'unverified'),
-  (2, 2, 6, NULL, NULL, 1, '2023-01-01 14:00:00', '2023-01-02 15:45:00', 'unverified'),
-  (3, 3, 3, NULL, NULL, 1, '2023-01-02 09:30:00', '2023-01-03 10:15:00', 'unverified'),
-  (4, 4, 8, NULL, NULL, 2, '2023-01-02 10:00:00', '2023-01-03 11:45:00', 'unverified'),
-  (5, 5, 9, NULL, NULL, 2, '2023-01-03 13:30:00', '2023-01-04 15:00:00', 'unverified');
+  (1, 1, 1, NULL, NULL, 1, '2023-01-01 12:00:00', '2024-03-02 14:30:00', 'unverified'),
+  (2, 2, 6, NULL, NULL, 1, '2023-01-01 14:00:00', '2024-03-02 15:45:00', 'unverified'),
+  (3, 3, 3, NULL, NULL, 1, '2023-01-02 09:30:00', '2024-01-03 10:15:00', 'unverified'),
+  (4, 6, 8, NULL, NULL, 2, '2023-01-02 10:00:00', '2024-03-01 11:45:00', 'unverified'),
+  (5, 7, 9, NULL, NULL, 2, '2023-01-03 13:30:00', '2024-02-01 15:00:00', 'unverified');
+
+
+
+ alter table building add column price_per_min NUMERIC (10,2);
+
+
+                                               ^
+carpark=# alter table session add column charge NUMERIC (10,2)
+-- Drop the existing foreign key constraint
+ALTER TABLE staff
+DROP CONSTRAINT staff_building_id_fkey;
+
+-- Add UNIQUE constraint to the building_id column
+ALTER TABLE building
+ADD CONSTRAINT building_id_unique UNIQUE (building_id);
+
+-- Recreate the foreign key constraint with ON UPDATE CASCADE
+ALTER TABLE staff
+ADD CONSTRAINT staff_building_id_fkey
+FOREIGN KEY (building_id) REFERENCES building(building_id) ON UPDATE CASCADE;
+
+
+-- Inserting more dummy data into the Session table with slot_id up to 20
+INSERT INTO session (slot_id, car_id,start_time , end_time, building_id, book_time, staff_auth,  arrival_time, charge)
+VALUES
+    (1, 1, '2024-03-03 20:10:00', NULL, 1, '2023-02-11 09:30:00', 'unverified', NULL, NULL),
+    (2, 3, '2024-03-03 21:25:00', NULL, 2, '2023-02-12 11:15:00', 'unverified', NULL, NULL),
+    (3, 6, '2024-03-03 22:50:00', NULL, 3, '2023-02-13 13:45:00', 'unverified', NULL, NULL),
+    (4, 8, '2024-03-03 23:35:00', NULL, 1, '2023-02-14 15:15:00', 'unverified', NULL, NULL),
+    (5, 9, '2024-03-04 00:50:00', NULL, 2, '2023-02-15 18:45:00', 'unverified', NULL, NULL),
+    (6, 10, '2024-03-04 01:35:00', NULL, 3, '2023-02-16 20:15:00', 'unverified', NULL, NULL),
+    (7, 11, '2024-03-04 02:40:00', NULL, 1, '2023-02-17 09:45:00', 'unverified', NULL, NULL),
+    (8, 12, '2024-03-04 03:25:00', NULL, 2, '2023-02-18 12:30:00', 'unverified', NULL, NULL),
+    (9, 13, '2024-03-04 04:50:00', NULL, 3, '2023-02-19 15:45:00', 'unverified', NULL, NULL),
+    (10, 15, '2024-03-04 05:35:00', NULL, 1, '2023-02-20 17:00:00', 'unverified', NULL, NULL),
+    (11, 16, '2024-03-04 06:20:00', NULL, 2, '2023-02-21 18:30:00', 'unverified', NULL, NULL),
+    (12, 17, '2024-03-04 07:45:00', NULL, 3, '2023-02-22 09:00:00', 'unverified', NULL, NULL),
+    (13, 18, '2024-03-04 08:30:00', NULL, 1, '2023-02-23 11:45:00', 'unverified', NULL, NULL),
+    (14, 19, '2024-03-04 09:55:00', NULL, 2, '2023-02-24 15:15:00', 'unverified', NULL, NULL),
+    (15, 20, '2024-03-04 10:40:00', NULL, 3, '2023-02-25 18:45:00', 'unverified', NULL, NULL),
+    (16, 21, '2024-03-04 11:45:00', NULL, 1, '2023-02-26 20:15:00', 'unverified', NULL, NULL),
+    (17, 22, '2024-03-04 12:30:00', NULL, 2, '2023-02-27 09:45:00', 'unverified', NULL, NULL),
+    (18, 23, '2024-03-04 13:55:00', NULL, 3, '2023-02-28 12:30:00', 'unverified', NULL, NULL),
+    (19, 24, '2024-03-04 14:40:00', NULL, 1, '2023-03-01 15:45:00', 'unverified', NULL, NULL),
+    (20, 42, '2024-03-04 15:55:00', NULL, 2, '2023-03-02 18:00:00', 'unverified', NULL, NULL);

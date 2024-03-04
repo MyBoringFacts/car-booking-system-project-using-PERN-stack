@@ -20,7 +20,6 @@ $(document).ready(function () {
       },
     });
   }
-
   // Function to update the reservation table with new data
   function updateReservationTable(data) {
     const tableBody = $("#reservationTableBody");
@@ -55,8 +54,26 @@ $(document).ready(function () {
       });
 
       rowElement.find(".reject-btn").click(function () {
-        // Handle reject logic if needed
+        const sessionId = $(this).data("session-id");
+        pressReject(sessionId, rowElement);
       });
+    });
+  }
+
+  function pressReject(sessionId, rowElement) {
+    const apiUrl = `http://localhost:5000/api/v1/sessions/pressReject/${sessionId}`;
+
+    $.ajax({
+      url: apiUrl,
+      type: "PUT",
+      success: function (response) {
+        console.log("Reject request successful:", response);
+        rowElement.remove(); // Remove the rejected session row from the table
+      },
+      error: function (error) {
+        console.error("Error sending reject request:", error);
+        // Optionally, you can handle errors or take additional actions upon failure
+      },
     });
   }
 
