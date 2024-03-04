@@ -503,7 +503,7 @@ app.get("/sessions/history", async (req, res) => {
     JOIN 
         customer ON car.customer_id = customer.customer_id
     WHERE 
-       
+         charge != 0 AND
         end_time IS NOT NULL
     ORDER BY 
         session.end_time DESC;
@@ -652,6 +652,147 @@ app.get("/api/v1/buildings/:buildingId/occupied-sessions", async (req, res) => {
       data: {
         acceptedSessions: results.rows,
       },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+
+// app.get("/api/v1/admin/buildings/slotsDetails", async (req, res) => {
+//   try {
+//     // Get all buildings
+//     const buildingResults = await pool.query(`SELECT * FROM building;`);
+
+//     const buildingDetails = await Promise.all(
+//       buildingResults.rows.map(async (building) => {
+//         const buildingId = building.building_id;
+
+//         // Get building_capacity for the current building
+//         const buildingCapacityResult = await pool.query(
+//           `SELECT building_capacity FROM building WHERE building_id = $1;`,
+//           [buildingId]
+//         );
+
+//         const buildingCapacity =
+//           buildingCapacityResult.rows[0]?.building_capacity;
+
+//         // Count the total_slot_number for the specified building_id
+//         const totalSlotResult = await pool.query(
+//           `SELECT COUNT(*) as total_slot_number FROM slot
+//          WHERE building_id = $1;`,
+//           [buildingId]
+//         );
+
+//         const totalSlotNumber = totalSlotResult.rows[0]?.total_slot_number;
+
+//         // Get available slots information
+//         const availableResults = await pool.query(
+//           `SELECT * FROM slot
+//          WHERE building_id = $1 AND slot_status = TRUE ORDER BY slot_id;`,
+//           [buildingId]
+//         );
+
+//         const availableSessions = availableResults.rows.map((slot) => ({
+//           building_id: slot.building_id,
+//           slot_id: slot.slot_id,
+//           slot_status: slot.slot_status,
+//         }));
+
+//         // Get occupied slots information
+//         const occupiedResults = await db.query(
+//           `SELECT * FROM slot
+//          WHERE building_id = $1 AND slot_status = FALSE;`,
+//           [buildingId]
+//         );
+
+//         const occupiedSessions = occupiedResults.rows.map((slot) => ({
+//           building_id: slot.building_id,
+//           slot_id: slot.slot_id,
+//           slot_status: slot.slot_status,
+//         }));
+
+//         return {
+//           building_id: buildingId,
+//           building_name: building.building_name,
+//           total_slot_number: totalSlotNumber,
+//           building_capacity: buildingCapacity,
+//           availableSessions: availableSessions,
+//           occupiedSessions: occupiedSessions,
+//         };
+//       })
+//     );
+
+//     res.status(200).json({
+//       status: "success",
+//       data: buildingDetails,
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+app.get("/api/v1/admin/buildings/slotsDetails", async (req, res) => {
+  try {
+    const buildingResults = await pool.query(`SELECT * FROM building;`);
+
+    const buildingDetails = await Promise.all(
+      buildingResults.rows.map(async (building) => {
+        const buildingId = building.building_id;
+
+        const buildingCapacityResult = await pool.query(
+          `SELECT building_capacity FROM building WHERE building_id = $1;`,
+          [buildingId]
+        );
+
+        const buildingCapacity =
+          buildingCapacityResult.rows[0]?.building_capacity;
+
+        const totalSlotResult = await pool.query(
+          `SELECT COUNT(*) as total_slot_number FROM slot
+         WHERE building_id = $1;`,
+          [buildingId]
+        );
+
+        const totalSlotNumber = totalSlotResult.rows[0]?.total_slot_number;
+
+        const availableResults = await pool.query(
+          `SELECT COUNT(*) AS available_sessions FROM slot
+           WHERE building_id = $1 AND slot_status = TRUE;`,
+          [buildingId]
+        );
+
+        const availableSessionsCount =
+          availableResults.rows[0].available_sessions;
+
+        const occupiedResults = await pool.query(
+          `SELECT COUNT(*) AS occupied_sessions FROM slot
+           WHERE building_id = $1 AND slot_status = FALSE;`,
+          [buildingId]
+        );
+
+        const occupiedSessionCount = occupiedResults.rows[0].occupied_sessions;
+
+        return {
+          building_id: buildingId,
+          building_name: building.building_name,
+          total_slot_number: totalSlotNumber,
+          building_capacity: buildingCapacity,
+          available_sessions: availableSessionsCount,
+          occupied_sessions: occupiedSessionCount,
+        };
+      })
+    );
+
+    res.status(200).json({
+      status: "success",
+      data: buildingDetails,
     });
   } catch (err) {
     console.error(err.message);

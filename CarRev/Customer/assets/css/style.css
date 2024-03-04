@@ -1,0 +1,353 @@
+
+@font-face {
+    font-family: poppin;
+    src: url('../fonts/Poppins-Regular.ttf');
+}
+.px-nav{
+    padding: 0 130px;
+}
+.logo{
+    width: 100px;
+    /* transform: translateX(-10px); */
+}
+*{
+    font-family: poppin;
+}
+nav{
+    background-color: #F7F8FA !important;
+    font-size: 15px !important;
+    color: #292929 !important;
+    font-size: 16px !important;
+}
+
+.nav-link.signup{
+    text-decoration: none !important;
+    color: #5C5C5C;
+    background-color: #6695FF;
+    padding: 5px 20px !important;
+    transform: translateY(3.5px);
+    border-radius: 100px;
+    color: #fff !important;
+    margin-left: 10px;
+}
+.banner{
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+.banner img{
+    width: 100%;
+}
+.banner .content{
+    position: absolute;
+    width: 528px;
+    margin-right: 165px;
+}
+.banner .content h1{
+    color: #fff;
+    font-size: 60px;
+    font-family: 'Raleway', sans-serif;
+}
+.banner .content p{
+    color: #E5E5E5;
+    font-size: 16px;
+    font-weight: 200;
+    margin-bottom: 55px;
+    padding-top: 10px
+}
+.primary-btn{
+    padding: 8px 28px;
+    border-radius: 100px;
+    background-color: #6695FF;
+    border: none;
+    font-size: 16px;
+    color: #fff;
+    text-decoration: none;
+    cursor: pointer;
+}
+.primary-outline-btn{
+    padding: 0 !important;
+    border-radius: 100px;
+    color: #6695FF;
+    background-color: transparent;
+    border: none;
+    font-size: 16px;
+    text-decoration: none;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 3px;
+    margin: 20px 0;
+}
+.primary-btn:hover{
+    color: #fff !important;
+}
+.main, footer{
+    padding: 80px 130px;
+}
+.section-1 .content {
+    width: 633px;
+}
+.section-1 .content h1{
+    font-size: 38px;
+    color: #3A3A3A;
+    font-weight: 600;
+}
+.section-1 .content p{
+    padding: 20px 0;
+    font-size: 18px;
+    color: #485450;
+    font-weight: 100;
+}
+.section-1 img{
+    width: 97%;
+}
+.section-2{
+    margin-top: 70px;
+    padding: 0 60px;
+}
+.section-2 h1{
+    color: #3A3A3A;
+    font-size: 38px;
+    font-weight: 600;
+}
+.section-2 .head{
+    font-weight: 600;
+    font-size: 24px;
+    color: #363848;
+    padding: 15px 0;
+    margin: 0;
+}
+.section-2 .text{
+    color: #72737C;
+    font-size: 16px;
+    font-weight: 300;
+    text-align: center;
+}
+
+.section-3{
+    margin-top: 70px;
+    padding: 0 60px;
+}
+.section-3 h1{
+    color: #3A3A3A;
+    font-size: 38px;
+    font-weight: 600;
+}
+
+
+.section-4{
+    margin-top: 70px;
+}
+.section-4 h1{
+    color: #3A3A3A;
+    font-size: 38px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+.section-4 h1 > .get_asn{
+    color: #6695FF;
+}
+.accordion-button:not(.collapsed),
+    .accordion-button:active{
+    background-color: transparent !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: #6695FF;
+
+}
+.accordion-button{
+    font-size: 24px !important;
+    color: #363848 !important;
+    text-transform: capitalize;
+    font-weight: 500;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+
+}
+.accordion-body{
+    font-size: 16px !important;
+    color:#72737C;
+    font-weight: 300 !important;
+
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+}
+.footer-text{
+    margin-top: 30px;
+    font-size: 16px;
+    color: #5F5F5F;
+    font-weight: 300;
+}
+.f-link{
+    color: #5F5F5F;
+    font-size: 16px;
+    margin-bottom: 10px;
+    text-decoration: none;
+}
+footer h4{
+    margin-bottom: 20px;
+}
+footer{
+    border-top: 1px solid #DBDBDB;
+}
+.very-foot{
+    border-top: 1px solid #DBDBDB;
+    padding: 20px 130px;
+    font-size: 12px;
+    font-family: Helvetica, sans-serif;
+    color: #5F5F5F;
+}
+
+.breadcrumb{
+    padding: 25px 130px !important;
+    font-size: 18px !important;
+}
+.breadcrumb a {
+    text-decoration: none;
+    color: #5C5C5C;
+}
+.breadcrumb .active{
+    color: #6695FF;
+}
+.book-banner{
+    padding: 0 130px;
+}
+.book{
+    padding: 0 130px;
+    margin-bottom: 100px;
+}
+.book .form{
+    background-color: #F2F4FA;
+    padding: 50px;
+}
+.book .form h1{
+    font-size: 30px;
+    color: #5C5C5C;
+}
+
+.form-label{
+    font-size: 16px;
+    color: #5F5F5F;
+}
+.form-label span{
+    color: red;
+}
+.form-control{
+    font-size: 16px !important;
+}
+.form-control::placeholder{
+    color: #BBBBBB !important;
+}
+.spot-area{
+    background-color: #fff;
+    width: 100% !important;
+    padding: 20px;
+    border-radius: 10px;
+    border: 1px solid #D9D9D9;
+    margin-bottom: 20px;
+}
+.spot{
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+.spot .child{
+    width: 100%;
+    height: 50px;
+    border-radius: 10px;
+    background-color: #D9D9D9;
+}
+.spot span {
+    width: 2px;
+    border: 1px solid #D9D9D9;
+}
+
+.spot .child.booked{
+    background-color: #6695FF;
+}
+
+.spot .child.taken{
+    background-color: #888888;
+}
+.book_success{
+    font-size: 24px;
+    color: #5C5C5C;
+    font-weight: 600;
+    margin: 30px 0;
+}
+
+.avatar{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.account .title{
+    font-size:30px;
+    font-weight: 600;
+    color: #3A3A3A;
+}
+
+.account .label{
+    color: #5F5F5F;
+    font-size: 20px;
+    font-weight: 600;
+}
+
+
+.account .value{
+    color: #7B7B7B;
+    font-size: 15px;
+    font-weight: 600;
+}
+.payment_info .title{
+    color: #3A3A3A;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.card.wallet{
+    border: 1px solid #787E8A !important;
+    border-radius: 15px !important;
+}
+
+.not_found{
+    padding: 80px 250px;
+}
+
+.not_found .title{
+    color: #5C5C5C;
+    font-weight: 600;
+    font-size: 40px;
+}
+
+.auth_title{
+    font-size: 24px;
+    font-weight: bolder;
+    color: #4F4F4F;
+    text-transform: capitalize;
+    margin: 30px 0 40px 0;
+}
+
+.auth-check{
+    font-size: 12px;
+    color: #72737C;
+
+}
+.auth-check a{
+    text-decoration: none;
+}
+
+.already{
+    color: #5F5F5F;
+    font-size: 14px;
+    padding-top: 20px;
+    display: block;
+}
+.already a{
+    text-decoration: none;
+    text-transform: uppercase;
+}

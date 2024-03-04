@@ -1,0 +1,155 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPRS - Home</title>
+    <link href="assets/css/style.css" rel="stylesheet" type="text/css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/x-icon" href="assets/img/logo.ico">
+</head>
+<body>
+    <nav class="navbar sticky-top navbar-expand-lg navbar-light bg-light px-nav py-3">
+        <div class="container-fluid d-flex gap-4 p-0">
+          <a class="navbar-brand" href="#">
+            <img src="assets/img/logo.svg" class="logo" alt="">
+          </a>
+          <div class="container d-flex justify-content-between align-items-center p-0" id="navbarSupportedContent">
+            <ul class="navbar-nav d-flex gap-3">
+              <li class="nav-item">
+                <a class="nav-link" href="account_index.html">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="account_index.html#about">About Us</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="account_index.html#why">Why Us</a>
+              </li>
+            </ul>
+
+            <div class="navbar-nav d-flex justify-content-end align-items-center gap-2">
+                <span class="customer-name" id="putUserNameHere">Loading,...</span>
+                <img src="assets/img/avatar.svg" width="50px" alt="">    
+               
+            </div>
+          </div>
+        </div>
+    </nav>
+    <section class="breadcrumb">
+        <a href="index.html">Home</a> &nbsp;/&nbsp;
+        <p class="active">Book Your Spot</p>
+     </section>
+     <section class="book-banner">
+        <img src="assets/img/book.svg" alt="" class="w-100">
+     </section>
+     <section class="book">
+        <div class="form">
+            <h1>Reserve your spot</h1>
+            <form action="" class="row mt-5">
+              
+                <div class="form-group col-12 mb-4">
+                    <label for="" class="form-label">Choose your preferred Car <span>*</span></label>
+                    <select class="form-control form-control-lg" id="customerCarSelector">
+                        <option disabled selected>--Choose your Car--</option>
+                    </select>
+                </div>
+
+
+                <div class="form-group col-6 mb-4">
+                    <label for="" class="form-label">Booking Date <span>*</span></label>
+                    <input type="date" class="form-control form-control-lg" placeholder="example@gmail.com">
+                </div>
+
+                <div class="form-group col-6 mb-4">
+                    <label for="" class="form-label">Booking Time <span>*</span></label>
+                    <input type="time" class="form-control form-control-lg" placeholder="example@gmail.com">
+                </div>
+
+
+                <div class="form-group col-12 mb-4">
+                    <label for="" class="form-label">Choose your preferred building <span>*</span></label>
+                    <select class="form-control form-control-lg" id="buildingSelector">
+                        <option disabled selected>--Choose your building--</option>
+                    </select>
+                </div>
+                <div class="form-group col-12 mb-4">
+                    <label for="" class="form-label">Choose your preferred Slot <span>*</span></label>
+                    <select class="form-control form-control-lg" id="buildingSlotSelector">
+                        <option disabled selected>--Choose your Slot--</option>
+                    </select>
+                </div>
+             
+                <div class="form-group">
+                    <button type="button" class="primary-btn" >Submit</button>
+                    <!-- data-bs-toggle="modal" data-bs-target="#exampleModal" -->
+                </div>
+            </form>
+        </div>
+     </section>
+     <!-- Complete modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+        <div class="modal-content p-5 d-flex justify-content-center align-items-center position-relative">
+            <button type="button" class="btn-close position-absolute" style="right:0; top:0;margin: 20px 20px 0 0" data-bs-dismiss="modal" aria-label="Close"></button>
+            <img src="assets/img/book_success.svg" width="70px" class="mt-4" alt="">
+            <h3 class="book_success">Made reservation successfully!</h3>
+            <a class="primary-btn" href="index.html">Back to Homepage</a>
+        </div>
+        </div>
+    </div>
+    <footer>
+      <div class="row">
+        <div class="col-5">
+          <img src="assets/img/logo.svg" alt="">
+          <p class="footer-text">
+            Streamline your parking experience with our intuitive reservation system. Effortlessly secure spots, enjoy 24/7 security, and experience convenience like never before. Reserve with confidence today.
+          </p>
+        </div>
+        <div class="col-2 pt-2 d-flex flex-column">
+          <h4>Quick Links</h4>
+          <a href="" class="f-link">About Us</a>
+          <a href="" class="f-link">Why Us</a>
+          <a href="" class="f-link">Reservation</a>
+        </div>
+        <div class="col-3 pt-2 d-flex flex-column">
+          <h4>Contacts</h4>
+          <a href="tel:+660828095784" class="f-link">+660828095784</a>
+          <a href="https://maps.app.goo.gl/34J13GtjsMQky4Uw8" target="_blank" class="f-link">BangNa, Thailand</a>
+          <a href="mailto:awesome@spotsaver.com" class="f-link">awesome@spotsaver.com</a>
+        </div>
+        <div class="col-2 pt-2 d-flex flex-column">
+          <h4>Follow Us</h4>
+          <div class="d-flex gap-3">
+            <a href="" class="f-link">
+              <img src="assets/img/x.svg" alt="">
+            </a>
+            <a href="" class="f-link">
+              <img src="assets/img/fb.svg" alt="">
+            </a>
+          </div>
+        </div>
+      </div>
+      
+    </footer>
+    <div class="very-foot row">
+      <div class="col-4">
+        ©2023  Spot Saver All Rights Reserved
+      </div>
+      <div class="col-4">
+        Terms of Use
+| Privacy Policy
+| Disclaimer
+      </div>
+
+      <div class="col-4">
+        Site by Group 4
+      </div>
+    </div>
+    <script src="backend/account_index.js"></script>
+    <script src="backend/booking.js"defer></script>
+    <script src="backend/carShower.js"></script>
+    <script src="backend/submitBooking.js"></script>
+</body>
+</html>

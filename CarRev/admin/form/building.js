@@ -93,26 +93,49 @@
 //     }
 // });
 
-// Fetch building data and render it
-fetch("http://localhost:5001/building")
+// Fetch building data and render it// Fetch building data and render it
+fetch("http://localhost:5001/api/v1/admin/buildings/slotsDetails")
   .then((response) => response.json())
-  .then((data) => {
+  .then((responseData) => {
+    const data = responseData.data; // Access the 'data' property from the response
+
     const tableBody = document.getElementById("building");
     data.forEach((building) => {
       const row = document.createElement("div");
       row.classList.add("col-3", "mb-3");
       row.innerHTML = `
-                <div class="custom-card text-center" style="border-right: 1px solid rgba(0,0,0,0.1);">
-                    <h5 class="">${building.building_name}</h5>
-                    <p>Maximum Capacity <span class="badge" style="background-color: #6695FF;">${building.building_capacity}</span></p>
-                    <div class="button-group">
-                        <button class="btn btn-sm btn-primary rounded edit-btn" data-building-id="${building.building_id}" style="background-color: #6695FF;border-color: #6695FF;">Edit</button>
-                        <button class="btn btn-sm btn-danger rounded delete-btn" data-building-id="${building.building_id}">Delete</button>
-                    </div>
-                </div>
-            `;
+              <div class="custom-card text-center" style="border-right: 1px solid rgba(0,0,0,0.1);">
+                  <h5 class="">${building.building_name}</h5>
+                  <p>Maximum Capacity <span class="badge" style="background-color: #6695FF;">${
+                    building.building_capacity
+                  }</span></p>
+                  <p>Availiable Slots <span class="badge" style="background-color: #6695FF;">${
+                    building.available_sessions
+                  }</span></p>
+                  <p>Occupied Slots <span class="badge" style="background-color: #6695FF;">${
+                    building.occupied_sessions
+                  }</span></p>
+                  <p>Usage Percentage <span class="badge" style="background-color: #6695FF;">${calculateUsagePercentage(
+                    building.available_sessions,
+                    building.building_capacity
+                  )}%</span></p>
+  <div class="button-group">
+                  <div class="button-group">
+                      <button class="btn btn-sm btn-primary rounded edit-btn" data-building-id="${
+                        building.building_id
+                      }" style="background-color: #6695FF;border-color: #6695FF;">Edit</button>
+                      <button class="btn btn-sm btn-danger rounded delete-btn" data-building-id="${
+                        building.building_id
+                      }">Delete</button>
+                  </div>
+              </div>
+          `;
       tableBody.appendChild(row);
     });
+    function calculateUsagePercentage(availableSessions, totalCapacity) {
+      const percentage = (availableSessions / totalCapacity) * 100;
+      return percentage.toFixed(2); // Round to two decimal places
+    }
 
     // Add event listeners for delete buttons
     const deleteButtons = document.querySelectorAll(".delete-btn");

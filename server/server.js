@@ -1390,30 +1390,130 @@ app.put("/api/v1/sessions/:sesssionId/pressAccept", async (req, res) => {
   }
 });
 
-app.delete("/api/v1/sessions/:sessionId", async (req, res) => {
-  const bookingId = req.params.sessionId;
+// app.delete("/api/v1/sessions/:sessionId", async (req, res) => {
+//   const bookingId = req.params.sessionId;
+
+//   try {
+//     const result = await db.query(
+//       `DELETE FROM session
+//        WHERE session_id = $1
+//        RETURNING *;`,
+//       [bookingId]
+//     );
+
+//     if (result.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Booking not found",
+//       });
+//     } else {
+//       res.status(200).json({
+//         status: "success",
+//         data: {
+//           message: "Booking canceled successfully",
+//         },
+//       });
+//     }
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+// // Delete operation for a specific slot in a specific building
+// app.delete("/api/v1/buildings/slots/:slotId", async (req, res) => {
+//   const temp = sessionManager.getSession();
+//   const buildingId = temp?.building_id;
+
+//   const slotId = req.params.slotId;
+
+//   try {
+//     const deleteSlotResults = await db.query(
+//       `DELETE FROM slot
+//        WHERE building_id = $1 AND slot_id = $2
+//        RETURNING *;`,
+//       [buildingId, slotId]
+//     );
+
+//     if (deleteSlotResults.rows.length === 0) {
+//       res.status(404).json({
+//         status: "error",
+//         message: "Slot not found",
+//       });
+//       return;
+//     }
+
+//     // Delete associated sessions
+//     const deleteSessionsResults = await db.query(
+//       `DELETE FROM session_table
+//        WHERE building_id = $1 AND slot_id = $2;`,
+//       [buildingId, slotId]
+//     );
+
+//     res.status(200).json({
+//       status: "success",
+//       message: "Slot and associated sessions deleted successfully",
+//       data: {
+//         slot: deleteSlotResults.rows[0],
+//         deletedSessionsCount: deleteSessionsResults.rowCount,
+//       },
+//     });
+//   } catch (err) {
+//     console.error(err.message);
+//     res.status(500).json({
+//       status: "error",
+//       message: "Internal Server Error",
+//     });
+//   }
+// });
+
+app.delete("/api/v1/buildings/slots/:slotId", async (req, res) => {
+  const temp = sessionManager.getSession();
+  const buildingId = temp?.building_id;
+
+  const slotId = req.params.slotId;
 
   try {
-    const result = await db.query(
-      `DELETE FROM session
-       WHERE session_id = $1
-       RETURNING *;`,
-      [bookingId]
+    // Check if there are associated sessions
+    const checkSessionResults = await db.query(
+      `SELECT * FROM session
+       WHERE building_id = $1 AND slot_id = $2;`,
+      [buildingId, slotId]
     );
 
-    if (result.rows.length === 0) {
+    if (checkSessionResults.rows.length > 0) {
+      res.status(200).json({
+        status: "error",
+        message: "Slot has associated sessions. Cannot delete.",
+      });
+      return;
+    }
+
+    // Delete the slot record
+    const deleteSlotResults = await db.query(
+      `DELETE FROM slot
+       WHERE building_id = $1 AND slot_id = $2
+       RETURNING *;`,
+      [buildingId, slotId]
+    );
+
+    if (deleteSlotResults.rows.length === 0) {
       res.status(404).json({
         status: "error",
-        message: "Booking not found",
+        message: "Slot not found",
       });
-    } else {
-      res.status(200).json({
-        status: "success",
-        data: {
-          message: "Booking canceled successfully",
-        },
-      });
+      return;
     }
+
+    res.status(200).json({
+      status: "success",
+      message: "Slot deleted successfully",
+      data: {
+        slot: deleteSlotResults.rows[0],
+      },
+    });
   } catch (err) {
     console.error(err.message);
     res.status(500).json({
@@ -1422,6 +1522,59 @@ app.delete("/api/v1/sessions/:sessionId", async (req, res) => {
     });
   }
 });
+app.delete("/api/v1/buildings/slots/:slotId/sessions", async (req, res) => {
+  const temp = sessionManager.getSession();
+  const buildingId = temp?.building_id;
+
+  const slotId = req.params.slotId;
+
+  try {
+    // Delete associated sessions
+    const deleteSessionsResults = await db.query(
+      `DELETE FROM session
+       WHERE building_id = $1 AND slot_id = $2;`,
+      [buildingId, slotId]
+    );
+
+    // Delete the slot record
+    const deleteSlotResults = await db.query(
+      `DELETE FROM slot
+       WHERE building_id = $1 AND slot_id = $2
+       RETURNING *;`,
+      [buildingId, slotId]
+    );
+
+    if (deleteSlotResults.rows.length === 0) {
+      res.status(404).json({
+        status: "error",
+        message: "Slot not found",
+      });
+      return;
+    }
+
+    res.status(200).json({
+      status: "success",
+      message: "Slot and associated sessions deleted successfully",
+      data: {
+        deletedSessionsCount: deleteSessionsResults.rowCount,
+        slot: deleteSlotResults.rows[0],
+      },
+    });
+  } catch (err) {
+    console.error(err.message);
+    res.status(500).json({
+      status: "error",
+      message: "Internal Server Error",
+    });
+  }
+});
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 
 app.get(
   "/api/v1/buildings/:buildingId/unverified-sessions",
